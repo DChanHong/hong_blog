@@ -1,78 +1,29 @@
-"use client";
 import Link from "next/link";
 import React, { useEffect } from "react";
 import { IoSearch } from "react-icons/io5";
 import { FcBusinessman } from "react-icons/fc";
 import axios from "axios";
 
-export default function Home() {
+const Page = () => {
   // if (Math.random() > 0.5) {
   //   throw new Error("Error occurred!");
   // }
 
   const getBtn = async () => {
     try {
-      const result = await axios.get("http://localhost:1337/api/blog-posts");
-      console.log(result.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getByBtn = async () => {
-    try {
-      const result = await axios.get("http://localhost:1337/api/blog-posts/2");
-      console.log(result.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const post = async () => {
-    try {
-      const result = await axios.post("http://localhost:1337/api/blog-posts", {
-        data: {
-          title: "블로그3",
-          sub_title: "블로그 서브",
-          content: "블로그입니다....아아아아",
-        },
-      });
-      console.log(result.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const deleted = async () => {
-    try {
-      const result = await axios.delete(
-        "http://localhost:1337/api/blog-posts/3"
-      );
-      console.log(result.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const put = async () => {
-    try {
-      const result = await axios.put("http://localhost:1337/api/blog-posts/3", {
-        data: {
-          title: "블로그2",
-        },
-      });
-      console.log(result.data.data);
+      const result = await axios.get("localhost:1337/api/blog_post");
+      console.log(result);
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <main className="w-full m-auto">
+    <section className="w-full m-auto">
       <div className="flex items-center justify-center font-bold text-center text-[2.5em] bg-[#010118] h-60 mb-10">
         <p className="text-white">Blog</p>
       </div>
-      <div className={`flex mb-4 justify-center`}>
+      <div className={`flex `}>
         <p>
           <button
             type="button"
@@ -82,42 +33,21 @@ export default function Home() {
             get
           </button>
         </p>
-        <p>
-          <button
-            type="button"
-            onClick={getByBtn}
-            className={`border-2 p-2 bg-purple-400`}
-          >
-            getbyId
-          </button>
-        </p>
-        <p>
-          <button
-            type="button"
-            onClick={deleted}
-            className={`border-2 p-2 bg-purple-400`}
-          >
+        {/* <p>
+          <button type="button" className={`border-2 p-2 bg-purple-400`}>
             delete
           </button>
         </p>
         <p>
-          <button
-            type="button"
-            onClick={post}
-            className={`border-2 p-2 bg-purple-400`}
-          >
+          <button type="button" className={`border-2 p-2 bg-purple-400`}>
             post
           </button>
         </p>
         <p>
-          <button
-            type="button"
-            onClick={put}
-            className={`border-2 p-2 bg-purple-400`}
-          >
+          <button type="button" className={`border-2 p-2 bg-purple-400`}>
             update
           </button>
-        </p>
+        </p> */}
       </div>
       <div className="w-8/12 m-auto">
         <div className="flex justify-between">
@@ -236,6 +166,8 @@ export default function Home() {
           </div>
         </div>
       </div>
-    </main>
+    </section>
   );
-}
+};
+
+export default Page;
