@@ -3,7 +3,7 @@
 const error = ({ error, reset }: { error: Error; reset: () => void }) => {
   return (
     <div>
-      <button onClick={reset}>Try Again</button>
+      <button onClick={reset}>Home</button>
     </div>
   );
 };

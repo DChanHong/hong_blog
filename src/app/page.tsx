@@ -1,9 +1,14 @@
 "use client";
-import Link from "next/link";
-import React, { useEffect } from "react";
-import { IoSearch } from "react-icons/io5";
-import { FcBusinessman } from "react-icons/fc";
+
+import Layout from "./components/commons/Layout";
 import axios from "axios";
+import { FaHtml5 } from "react-icons/fa";
+import { FaCss3 } from "react-icons/fa";
+import { FaReact } from "react-icons/fa";
+import { FaNode } from "react-icons/fa";
+import { SiMysql } from "react-icons/si";
+import { SiTypescript } from "react-icons/si";
+import { IoLogoJavascript } from "react-icons/io5";
 
 export default function Home() {
   // if (Math.random() > 0.5) {
@@ -21,8 +26,8 @@ export default function Home() {
 
   const getByBtn = async () => {
     try {
-      const result = await axios.get("http://localhost:1337/api/blog-posts/2");
-      console.log(result.data.data);
+      const result = await axios.get("http://localhost:1337/api/blog-posts/5");
+      console.log(result.data.data.attributes);
     } catch (error) {
       console.error(error);
     }
@@ -68,174 +73,187 @@ export default function Home() {
   };
 
   return (
-    <main className="w-full m-auto">
-      <div className="flex items-center justify-center font-bold text-center text-[2.5em] bg-[#010118] h-60 mb-10">
-        <p className="text-white">Blog</p>
-      </div>
-      <div className={`flex mb-4 justify-center`}>
-        <p>
-          <button
-            type="button"
-            onClick={getBtn}
-            className={`border-2 p-2 bg-purple-400`}
-          >
-            get
-          </button>
-        </p>
-        <p>
-          <button
-            type="button"
-            onClick={getByBtn}
-            className={`border-2 p-2 bg-purple-400`}
-          >
-            getbyId
-          </button>
-        </p>
-        <p>
-          <button
-            type="button"
-            onClick={deleted}
-            className={`border-2 p-2 bg-purple-400`}
-          >
-            delete
-          </button>
-        </p>
-        <p>
-          <button
-            type="button"
-            onClick={post}
-            className={`border-2 p-2 bg-purple-400`}
-          >
-            post
-          </button>
-        </p>
-        <p>
-          <button
-            type="button"
-            onClick={put}
-            className={`border-2 p-2 bg-purple-400`}
-          >
-            update
-          </button>
-        </p>
-      </div>
-      <div className="w-8/12 m-auto">
-        <div className="flex justify-between">
-          <div className="w-8/12">
-            <Link href={"/"} className="w-full ">
-              <div className="font-bold text-[1.8em] my-4">
-                블로그 작성 제목입니다.
-              </div>
-              <div className="flex items-center pb-4">
-                <p className="border-2 mr-6 w-[4rem] h-[4rem]">
-                  <FcBusinessman className="w-full h-full" />
-                </p>
-                <ul className="flex flex-col ">
-                  <li>
-                    <span className="text-[18px]">Hong</span>
-                    <span className="text-[14px] ml-2 text-[#828282]">
-                      2023-11-15
-                    </span>
-                  </li>
-                  <li className="text-[#828282] text-[16px]">
-                    코드 실행 중에 예기치 못한 에러가 발생했을 때가 있다.
-                  </li>
-                </ul>
-              </div>
-              <div className="pb-10 border-b-2">
-                코드 실행 중에 예기치 못한 에러가 발생했을 때, 이로부터 코드의
-                실행 흐름을 복구할 수 있는데, 이를 예외처리(Excpetion handling)
-                라고 한다.JavaScript는 기본적으로 싱글 스레드라서 스레드가
-                멈춘다는 것은 프로세스가 멈추는 것이라서, 예외처리는
-              </div>
-            </Link>
-            <Link href={"/"} className="w-full ">
-              <div className="font-bold text-[1.8em] my-4">
-                블로그 작성 제목입니다.
-              </div>
-              <div className="flex items-center pb-4">
-                <p className="border-2 mr-6 w-[4rem] h-[4rem]">
-                  <FcBusinessman className="w-full h-full" />
-                </p>
-                <ul className="flex flex-col ">
-                  <li>
-                    <span className="text-[18px]">Hong</span>
-                    <span className="text-[14px] ml-2 text-[#828282]">
-                      2023-11-15
-                    </span>
-                  </li>
-                  <li className="text-[#828282] text-[16px]">
-                    코드 실행 중에 예기치 못한 에러가 발생했을 때가 있다.
-                  </li>
-                </ul>
-              </div>
-              <div className="pb-10 border-b-2">
-                코드 실행 중에 예기치 못한 에러가 발생했을 때, 이로부터 코드의
-                실행 흐름을 복구할 수 있는데, 이를 예외처리(Excpetion handling)
-                라고 한다.JavaScript는 기본적으로 싱글 스레드라서 스레드가
-                멈춘다는 것은 프로세스가 멈추는 것이라서, 예외처리는
-              </div>
-            </Link>
+    <Layout>
+      <section className=" w-full h-full mt-14 m-auto">
+        <div className="flex items-center justify-center font-bold text-center text-[2.5em] bg-[#010118] h-60">
+          <p className="text-white">Hong's Developer</p>
+        </div>
+        <div className={`flex mb-4 justify-center`}>
+          <p>
+            <button
+              type="button"
+              onClick={getBtn}
+              className={`border-2 p-2 bg-purple-400`}
+            >
+              get
+            </button>
+          </p>
+          <p>
+            <button
+              type="button"
+              onClick={getByBtn}
+              className={`border-2 p-2 bg-purple-400`}
+            >
+              getbyId
+            </button>
+          </p>
+          <p>
+            <button
+              type="button"
+              onClick={deleted}
+              className={`border-2 p-2 bg-purple-400`}
+            >
+              delete
+            </button>
+          </p>
+          <p>
+            <button
+              type="button"
+              onClick={post}
+              className={`border-2 p-2 bg-purple-400`}
+            >
+              post
+            </button>
+          </p>
+          <p>
+            <button
+              type="button"
+              onClick={put}
+              className={`border-2 p-2 bg-purple-400`}
+            >
+              update
+            </button>
+          </p>
+        </div>
+        <div className="w-8/12 m-auto">
+          <h3 className="font-bold text-[2.5em] mt-20">Me</h3>
+          <div className="my-2 py-4">
+            <ul className="text-xl leading-8 ">
+              <li>
+                React와 NodeJs를 활용한 프로젝트를 진행한 경험이 있습니다.
+              </li>
+              <li>
+                레이아웃 구성, 기능 구현 및 서버 구축을 통해 프론트와 백엔드의
+                역할에 대해서 경험해 보았습니다.
+              </li>
+              <li>
+                기능 구현 시, 구상도, 컴포넌트, CSS 등 구현 전 설계의 중요성에
+                대해 알고 있고,
+              </li>
+              <li>
+                예상치 못한 추가적인 옵션들을 추가하기 위한 유연한 설계의
+                필요성을 잘 알고 있습니다.
+              </li>
+              <li>
+                이러한 경험을 바탕으로 지속적인 성장을 위해 노력하는 개발자가
+                되겠습니다.
+              </li>
+            </ul>
           </div>
-          <div className="3/12">
-            <div className=" px-2">
-              <div className="flex border-2 mb-6 rounded-xl p-1 justify-between">
-                <input
-                  className="mx-2 p-1 outline-none	"
-                  type="text"
-                  placeholder="Search for Keyword"
-                />
-                <button type="button">
-                  <IoSearch size={30} />
+          <h3 className="font-bold text-[2.5em] mt-20">기술 스택</h3>
+          <div className="flex w-full my-2 py-4">
+            <ul className="w-1/2 mx-2">
+              <li className="flex my-8 mx-4">
+                <span className="w-12 h-12 mx-2">
+                  <FaHtml5 className="w-12 h-12" />
+                </span>
+                <span>
+                  HTML 마크업을 웹 접근성과 호환성을 생각하고 사용합니다.
+                </span>
+              </li>
+              <li className="flex my-8 mx-4">
+                <span className="w-12 h-12 mx-2">
+                  <FaCss3 className="w-12 h-12" />
+                </span>
+                <span>
+                  CSS Flex,Grid를 이용하여 레이아웃 설계를 할 수 있으며, CSS
+                  프레임워크로 Tailwind CSS를 사용하였습니다.
+                </span>
+              </li>
+              <li className="flex my-8 mx-4">
+                <span className="w-12 h-12 mx-2">
+                  <FaReact className="w-12 h-12" />
+                </span>
+                <span>
+                  React 환경에서 상태 관리 , 컴포넌트 구조화를 이해하고 적용할
+                  수 있습니다.
+                </span>
+              </li>
+              <li className="flex my-8 mx-4">
+                <span className="w-12 h-12 mx-2">
+                  <SiTypescript className="w-12 h-12" />
+                </span>
+                <span>
+                  TypeScript를 사용하여, 정적 타입 언어를 사용하는 이유를
+                  이해하였습니다.
+                </span>
+              </li>
+            </ul>
+            <ul className="w-1/2 mx-2">
+              <li className="flex my-8 mx-4">
+                <span className="w-12 h-12 mx-2">
+                  <FaNode className="w-12 h-12" />
+                </span>
+                <span>
+                  HTML 마크업을 웹 접근성과 호환성을 생각하고 사용합니다.
+                </span>
+              </li>
+              <li className="flex my-8 mx-4">
+                <span className="w-12 h-12 mx-2">
+                  <SiMysql className="w-12 h-12" />
+                </span>
+                <span>
+                  HTML 마크업을 웹 접근성과 호환성을 생각하고 사용합니다.
+                </span>
+              </li>
+              <li className="flex my-8 mx-4">
+                <span className="w-12 h-12 mx-2">
+                  <FaReact className="w-12 h-12" />
+                </span>
+                <span>
+                  HTML 마크업을 웹 접근성과 호환성을 생각하고 사용합니다.
+                </span>
+              </li>
+              <li className="flex my-8 mx-4">
+                <span className="w-12 h-12 mx-2">
+                  <IoLogoJavascript className="w-12 h-12" />
+                </span>
+                <span>
+                  ECMA Script6 및 브라우저 버전 호환성에 대한 이해도를 가지고
+                  있습니다.
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <h3 className="font-bold text-[2.5em] mt-20">My Blog List</h3>
+          <div className="my-2 py-4">
+            <ul className="w-full">
+              <li className="border-2 w-full h-full p-6 my-2 text-xl rounded-xl">
+                <button type="button" className="w-full h-full">
+                  Next Image를 사용한 이미치 최적화 및 속도 개선(feat :
+                  라이트하우스)
                 </button>
-              </div>
-              <div>
-                <p className="text-center mt-4 text-[1.8em] font-bold">Tags</p>
-                <p className="text-[1.5em] font-semibold">Skill</p>
-                <ul>
-                  <li className="ml-6 mt-2 text-[#858585]">#CSS</li>
-                  <li className="ml-6 mt-2 text-[#858585]">#React</li>
-                  <li className="ml-6 mt-2 text-[#858585]">#Next</li>
-                  <li className="ml-6 mt-2 text-[#858585]">#Node</li>
-                  <li className="ml-6 mt-2 text-[#858585]">#Redux</li>
-                </ul>
-                <p className="text-[1.5em] mt-4 font-semibold">
-                  TroubleShooting
-                </p>
-                <ul>
-                  <li className="ml-6 mt-2 text-[#858585]">
-                    <button>#error</button>
-                  </li>
-                  <li className="ml-6 mt-2 text-[#858585]">
-                    <button>#Debugging</button>
-                  </li>
-                  <li className="ml-6 mt-2 text-[#858585]">
-                    <button>#Test</button>
-                  </li>
-                </ul>
-              </div>
-              <p className="text-[1.5em] mt-4 font-semibold">CS</p>
-              <ul>
-                <li className="ml-6 mt-2 text-[#858585]">
-                  <button>#data structure</button>
-                </li>
-                <li className="ml-6 mt-2 text-[#858585]">
-                  <button>#network</button>
-                </li>
-                <li className="ml-6 mt-2 text-[#858585]">
-                  <button>#algorithm</button>
-                </li>
-                <li className="ml-6 mt-2 text-[#858585]">
-                  <button>#OS</button>
-                </li>
-                <li className="ml-6 mt-2 text-[#858585]">
-                  <button>#architecture</button>
-                </li>
-              </ul>
-            </div>
+              </li>
+              <li className="border-2 w-full h-full p-6 my-2 text-xl rounded-xl ">
+                <button type="button" className="w-full h-full">
+                  예외처리란?( + 적용)
+                </button>
+              </li>
+              <li className="border-2 w-full h-full p-6 my-2 text-xl rounded-xl">
+                <button type="button" className="w-full h-full">
+                  React Query ( feat: usequery,caching, stale )
+                </button>
+              </li>
+              <li className="border-2 w-full h-full p-6 my-2 text-xl rounded-xl">
+                <button type="button" className="w-full h-full">
+                  네이버api를 이용한 Oauth2.0 로그인 구현(NextJs + NodeJs)
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
-    </main>
+      </section>
+    </Layout>
   );
 }
