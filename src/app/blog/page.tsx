@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Layout from "../components/common/Layout";
+import Layout from "../components/commons/Layout";
 import { IoSearch } from "react-icons/io5";
 import { FcBusinessman } from "react-icons/fc";
 import Link from "next/link";

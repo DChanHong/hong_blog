@@ -11,119 +11,11 @@ import { SiTypescript } from "react-icons/si";
 import { IoLogoJavascript } from "react-icons/io5";
 
 export default function Home() {
-  // if (Math.random() > 0.5) {
-  //   throw new Error("Error occurred!");
-  // }
-
-  const getBtn = async () => {
-    try {
-      const result = await axios.get("http://localhost:1337/api/blog-posts");
-      console.log(result.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const getByBtn = async () => {
-    try {
-      const result = await axios.get("http://localhost:1337/api/blog-posts/5");
-      console.log(result.data.data.attributes);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const post = async () => {
-    try {
-      const result = await axios.post("http://localhost:1337/api/blog-posts", {
-        data: {
-          title: "블로그3",
-          sub_title: "블로그 서브",
-          content: "블로그입니다....아아아아",
-        },
-      });
-      console.log(result.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const deleted = async () => {
-    try {
-      const result = await axios.delete(
-        "http://localhost:1337/api/blog-posts/3"
-      );
-      console.log(result.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const put = async () => {
-    try {
-      const result = await axios.put("http://localhost:1337/api/blog-posts/3", {
-        data: {
-          title: "블로그2",
-        },
-      });
-      console.log(result.data.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <Layout>
       <section className=" w-full h-full mt-14 m-auto">
         <div className="flex items-center justify-center font-bold text-center text-[2.5em] bg-[#010118] h-60">
           <p className="text-white">Hong's Developer</p>
-        </div>
-        <div className={`flex mb-4 justify-center`}>
-          <p>
-            <button
-              type="button"
-              onClick={getBtn}
-              className={`border-2 p-2 bg-purple-400`}
-            >
-              get
-            </button>
-          </p>
-          <p>
-            <button
-              type="button"
-              onClick={getByBtn}
-              className={`border-2 p-2 bg-purple-400`}
-            >
-              getbyId
-            </button>
-          </p>
-          <p>
-            <button
-              type="button"
-              onClick={deleted}
-              className={`border-2 p-2 bg-purple-400`}
-            >
-              delete
-            </button>
-          </p>
-          <p>
-            <button
-              type="button"
-              onClick={post}
-              className={`border-2 p-2 bg-purple-400`}
-            >
-              post
-            </button>
-          </p>
-          <p>
-            <button
-              type="button"
-              onClick={put}
-              className={`border-2 p-2 bg-purple-400`}
-            >
-              update
-            </button>
-          </p>
         </div>
         <div className="w-8/12 m-auto">
           <h3 className="font-bold text-[2.5em] mt-20">Me</h3>
