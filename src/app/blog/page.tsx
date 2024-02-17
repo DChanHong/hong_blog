@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import moment from "moment";
 import Layout from "../../components/commons/Layout";
@@ -8,25 +8,70 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { blogListDto } from "@/dataDto/blogDto";
-
 import { htmlTagRemove } from "@/utils/blogList";
 import { truncateText } from "@/utils/blogList";
 
 const Index = () => {
-  const [blogList, setBlogList] = useState<blogListDto[] | null>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const [blogList, setBlogList] = useState<blogListDto[] | null>(null);
+  const [filterList, setFilterList] = useState<blogListDto[] | null>(null);
+  const [tagList, setTagList] = useState<string[] | null>(null);
+
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const getBlogList = async () => {
     const result = await axios.get(`http://localhost:1337/api/blog-posts`);
     if (result) {
       setBlogList(result.data.data);
+      setFilterList(result.data.data);
     }
   };
+  useEffect(() => {
+    if (blogList) {
+      let uniqueArray: string[] = Array.from(
+        new Set(blogList.flatMap((item) => item.attributes.tags))
+      );
+      setTagList(uniqueArray);
+    }
+  }, [blogList]);
 
   useEffect(() => {
     getBlogList();
   }, [pathname]);
+
+  const searchList = () => {
+    if (searchRef.current && blogList) {
+      let filteredList;
+      if (searchRef.current?.value === "") {
+        setFilterList(blogList);
+      } else {
+        filteredList = blogList.filter((item: blogListDto) => {
+          return item.attributes.title.includes(searchRef.current?.value || "");
+        });
+        setFilterList(filteredList);
+      }
+    }
+  };
+
+  const tagSearch = (tag: string) => {
+    if (blogList) {
+      const filteredList = blogList.filter((item) => {
+        return item.attributes.tags.includes(tag);
+      });
+      if (filteredList.length <= 0) {
+        setFilterList(blogList);
+      } else {
+        setFilterList(filteredList);
+      }
+    }
+  };
+
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      searchList();
+    }
+  };
 
   return (
     <Layout>
@@ -35,13 +80,13 @@ const Index = () => {
           <p className="text-white">Blog</p>
         </div>
 
-        <div className="w-8/12 mt-10 m-auto">
-          <div className="flex justify-between">
-            {!blogList ? (
+        <div className="max-w-[1800px] w-11/12 m-auto md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-full mt-10 m-auto">
+          <div className="flex flex-col-reverse  lg:flex-row justify-between">
+            {!filterList || !blogList || !tagList ? (
               <>loading...</>
             ) : (
-              <div className={`flex flex-col justify-center`}>
-                {blogList.map((item: blogListDto, index: number) => (
+              <div className={`w-full lg:w-9/12 flex flex-col justify-center`}>
+                {filterList.map((item: blogListDto, index: number) => (
                   <Link
                     key={index}
                     href={`/blog/${item.id}/${item.attributes.title}`}
@@ -51,18 +96,43 @@ const Index = () => {
                       <div className="font-bold text-[1.8em] my-4">
                         {item.attributes.title}
                       </div>
-                      <div className="flex pb-4">
-                        <div className="mr-6 w-3/12 h-full">
+                      <div className="flex flex-col md:flex-row pb-4">
+                        <div className="mr-6 w-full md:w-3/12 h-full flex md:block">
                           <Image
                             src={`http://localhost:1337/uploads/${item.attributes.thumbnail_img_link}`}
                             alt="썸네일 이미지"
-                            className={`w-full h-[200px]`}
+                            className={`w-4/12 xs:w-1/2 md:w-full h-[100px] xs:h-[150px] md:h-[200px]`}
                             width={200}
                             height={200}
                           />
+                          <ul
+                            className={`w-8/12 xs:w-1/2 ml-1 block md:hidden`}
+                          >
+                            <li>
+                              <span className="text-[16px] md:text-[26px]">
+                                {item.attributes.creator}
+                              </span>
+                            </li>
+                            <li>
+                              <span className="text-[13px] md:text-[16px] text-[#828282]">
+                                {moment(item.attributes.createdAt).format(
+                                  "YYYY-MM-DD"
+                                )}
+                              </span>
+                            </li>
+                            <li className="text-[#828282] flex space-x-1.5 text-[15px] md:text-[20px]">
+                              <span>{item.attributes.intro}</span>
+                              {/* {item.attributes.tags.map(
+                            (tag: string, index: number) => (
+                              <span key={index}>#{tag}</span>
+                            )
+                          )} */}
+                            </li>
+                          </ul>
                         </div>
+
                         <div className={`w-9/12`}>
-                          <ul className="flex flex-col space-y-1">
+                          <ul className="hidden md:flex flex-col space-y-1">
                             <li>
                               <span className="text-[26px]">
                                 {item.attributes.creator}
@@ -95,63 +165,42 @@ const Index = () => {
                 ))}
               </div>
             )}
-            <div className="3/12">
+            <div className=" w-full lg:w-3/12">
               <div className=" px-2 py-4">
-                <div className="flex border-2 mb-6 rounded-xl p-1 justify-between">
+                <div className="flex border-2 lg:mb-6 rounded-xl justify-between p-1">
                   <input
-                    className="mx-2 p-1 outline-none	"
+                    className="mx-2 p-1 outline-none w-11/12"
+                    ref={searchRef}
                     type="text"
-                    placeholder="Search for Keyword"
+                    onKeyUp={handleKeyUp}
+                    placeholder="Search for Title"
                   />
-                  <button type="button">
+                  <button
+                    type="button"
+                    onClick={searchList}
+                    className={`w-/12`}
+                  >
                     <IoSearch size={30} />
                   </button>
                 </div>
                 <div>
-                  <p className="text-center mt-4 text-[1.8em] font-bold">
+                  <p className="hidden lg:block text-center mt-4 text-[1.8em] font-bold">
                     Tags
                   </p>
-                  <p className="text-[1.5em] font-semibold">Skill</p>
-                  <ul>
-                    <li className="ml-6 mt-2 text-[#858585]">#CSS</li>
-                    <li className="ml-6 mt-2 text-[#858585]">#React</li>
-                    <li className="ml-6 mt-2 text-[#858585]">#Next</li>
-                    <li className="ml-6 mt-2 text-[#858585]">#Node</li>
-                    <li className="ml-6 mt-2 text-[#858585]">#Redux</li>
-                  </ul>
-                  <p className="text-[1.5em] mt-4 font-semibold">
-                    TroubleShooting
-                  </p>
-                  <ul>
-                    <li className="ml-6 mt-2 text-[#858585]">
-                      <button>#error</button>
-                    </li>
-                    <li className="ml-6 mt-2 text-[#858585]">
-                      <button>#Debugging</button>
-                    </li>
-                    <li className="ml-6 mt-2 text-[#858585]">
-                      <button>#Test</button>
-                    </li>
-                  </ul>
+                  <div
+                    className={`flex flex-row   mt-2 space-x-1 ml-4 lg:ml-0 lg:mt-0 lg:flex-col lg:space-y-1 text-[#858585]`}
+                  >
+                    {tagList?.map((item: string, index: number) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => tagSearch(item)}
+                      >
+                        #{item}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <p className="text-[1.5em] mt-4 font-semibold">CS</p>
-                <ul>
-                  <li className="ml-6 mt-2 text-[#858585]">
-                    <button>#data structure</button>
-                  </li>
-                  <li className="ml-6 mt-2 text-[#858585]">
-                    <button>#network</button>
-                  </li>
-                  <li className="ml-6 mt-2 text-[#858585]">
-                    <button>#algorithm</button>
-                  </li>
-                  <li className="ml-6 mt-2 text-[#858585]">
-                    <button>#OS</button>
-                  </li>
-                  <li className="ml-6 mt-2 text-[#858585]">
-                    <button>#architecture</button>
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
