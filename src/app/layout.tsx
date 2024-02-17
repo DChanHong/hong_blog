@@ -1,4 +1,9 @@
-import "./globals.css";
+import "@/public/styles/global.css";
+
+export const metadata = {
+  title: "",
+  description: "",
+};
 
 export default function RootLayout({
   children,
@@ -6,8 +11,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body suppressHydrationWarning={true}>{children}</body>
+    <html lang="ko-KR">
+      <body className="">{children}</body>
     </html>
   );
 }

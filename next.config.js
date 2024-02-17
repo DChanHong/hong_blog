@@ -44,3 +44,10 @@ module.exports = withSentryConfig(
     automaticVercelMonitors: true,
   }
 );
+// Images 설정 추가
+module.exports = {
+  ...module.exports,
+  images: {
+    domains: ["localhost"], // 허용할 호스트네임을 추가
+  },
+};
