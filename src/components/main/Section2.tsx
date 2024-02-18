@@ -12,7 +12,7 @@ const Section2 = () => {
       ref={targetRef}
     >
       <div
-        className={` w-11/12 md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-full p-4`}
+        className={` w-11/12 md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-11/12 p-4`}
       >
         <Link href={"/career"}>
           <h2

@@ -31,7 +31,7 @@ const Index = ({ params }: { params: { blog_data: string[] } }) => {
         ) : (
           <div className={`flex justify-center p-4 mt-20`}>
             <div
-              className="prose full-width"
+              className="prose full-width dark:!text-[#b7babe]"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(data.attributes.content),
               }}

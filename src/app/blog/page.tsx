@@ -75,12 +75,12 @@ const Index = () => {
 
   return (
     <Layout>
-      <section className="w-full mt-14 m-auto">
+      <section className="w-full m-auto">
         <div className="flex items-center justify-center font-bold text-center text-[26px] xs:text-[46px] md:text-[70px] h-[50vh] md:h-[70vh] bg-[#010118] mt-[100px] text-white">
           <p className="text-white">Blog</p>
         </div>
 
-        <div className="max-w-[1800px] w-11/12 m-auto md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-full mt-10 m-auto">
+        <div className="max-w-[1800px] w-11/12 m-auto md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-11/12 mt-10 m-auto">
           <div className="flex flex-col-reverse  lg:flex-row justify-between">
             {!filterList || !blogList || !tagList ? (
               <>loading...</>
@@ -169,7 +169,7 @@ const Index = () => {
               <div className=" px-2 py-4">
                 <div className="flex border-2 lg:mb-6 rounded-xl justify-between p-1">
                   <input
-                    className="mx-2 p-1 outline-none w-11/12"
+                    className="mx-2 p-1 outline-none w-11/12 w-full h-full rounded-xl p-2 dark:bg-[#232323]"
                     ref={searchRef}
                     type="text"
                     onKeyUp={handleKeyUp}

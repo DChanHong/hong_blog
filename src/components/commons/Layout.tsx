@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { DarkModeButton } from "../dark/DarkModeButton";
+
 import { AiFillHome } from "react-icons/ai";
 import { BsBook } from "react-icons/bs";
 import { BiSolidUser } from "react-icons/bi";
@@ -20,34 +22,45 @@ const Layout = ({ children }: Wrapper) => {
 
   return (
     <>
-      <div className={`min-h-[100%]`}>
+      <div
+        className={`min-h-[100%] dark:bg-[#2e2e2e] dark:text-[#b7babe] pb-[100px]`}
+      >
         <header
-          className={`fixed h-[100px] top-0 w-full z-10 bg-black text-white flex items-center sm:justify-normal	justify-between	`}
+          className={` fixed h-[100px]  top-0 w-full z-10 bg-black text-white 	`}
         >
-          <h1 className={`font-bold text-[15px] xs:text-[25px] mx-8`}>
-            <Link href={"/"}>Hong Engineering</Link>
-          </h1>
-          <ul className=" flex">
-            <li className={`hidden sm:block font-semibold text-[25px] mx-4`}>
-              <Link href={"/blog"}>
-                <span>Blog</span>
-              </Link>
-            </li>
-            <li className={`hidden sm:block font-semibold text-[25px] mx-4`}>
-              <Link href={"/career"}>
-                <span>Career</span>
-              </Link>
-            </li>
-            <li className={`block sm:hidden font-semibold text-[1.4em] mx-4`}>
-              <button
-                onClick={() => setSideNavBar(!sideNavBar)}
-                type="button"
-                className="w-[2rem]"
-              >
-                <GiHamburgerMenu className="underline_on_hover" />
-              </button>
-            </li>
-          </ul>
+          <div
+            className={`relative flex h-full items-center sm:justify-normal	justify-between`}
+          >
+            <h1 className={`font-bold text-[15px] xs:text-[25px] mx-8`}>
+              <Link href={"/"}>Hong Engineering</Link>
+            </h1>
+            <p className={`absolute top-8 right-14 sm:right-5 `}>
+              <DarkModeButton />
+            </p>
+
+            <ul className=" flex">
+              <li className={`hidden sm:block font-semibold text-[25px] mx-4`}>
+                <Link href={"/blog"}>
+                  <span>Blog</span>
+                </Link>
+              </li>
+              <li className={`hidden sm:block font-semibold text-[25px] mx-4`}>
+                <Link href={"/career"}>
+                  <span>Career</span>
+                </Link>
+              </li>
+
+              <li className={`block sm:hidden font-semibold text-[1.4em] mx-4`}>
+                <button
+                  onClick={() => setSideNavBar(!sideNavBar)}
+                  type="button"
+                  className="w-[2rem]"
+                >
+                  <GiHamburgerMenu size={"32"} className="underline_on_hover" />
+                </button>
+              </li>
+            </ul>
+          </div>
         </header>
 
         <nav
@@ -117,7 +130,7 @@ const Layout = ({ children }: Wrapper) => {
 
       <footer>
         <div
-          className={`flex items-center align-item justify-evenly bg-[#F9F9F9] h-[100px]`}
+          className={`flex items-center align-item justify-evenly bg-[#F9F9F9] dark:bg-[#000] h-[100px]`}
         >
           <ul>
             <li className={`font-bold text-[14px] xs:text-[20px]`}>

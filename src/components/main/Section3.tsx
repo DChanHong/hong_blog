@@ -35,7 +35,9 @@ const Section3 = () => {
       className={`w-full m-auto max-w-[1800px] flex justify-center ${flagClass}`}
       ref={targetRef}
     >
-      <div className={`w-11/12 md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-full`}>
+      <div
+        className={` w-11/12 md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-11/12`}
+      >
         <Link href={"/blog"}>
           <h2
             className={`font-bold  text-[40px] md:text-[50px] 3xl:text-[60px] 6xl:text-[70px] mb-4 pb-4 border-b-2`}
