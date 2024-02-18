@@ -17,9 +17,9 @@ const Section2 = () => {
       >
         <Link href={"/career"}>
           <h2
-            className={` font-bold mb-4 text-[40px] md:text-[50px] 3xl:text-[60px] 6xl:text-[70px]`}
+            className={` font-bold mb-4 text-[40px] md:text-[50px] 3xl:text-[60px] 6xl:text-[70px] pb-4 border-b-2`}
           >
-            Career
+            <span className="text-container">Career</span>
           </h2>
         </Link>
         <div className={`flex`}>
@@ -74,6 +74,28 @@ const Section2 = () => {
           </div>
         </div>
       </div>
+      <style jsx>
+        {`
+          .text-container {
+            position: relative;
+          }
+
+          .text-container::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background-color: black;
+            transition: width 0.3s ease;
+          }
+
+          .text-container:hover::before {
+            width: 100%; /* 호버 시 가로 크기를 100%로 늘려 라인이 나타나도록 함 */
+          }
+        `}
+      </style>
     </div>
   );
 };

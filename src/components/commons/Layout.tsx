@@ -32,7 +32,9 @@ const Layout = ({ children }: Wrapper) => {
             className={`relative flex h-full items-center sm:justify-normal	justify-between`}
           >
             <h1 className={`font-bold text-[15px] xs:text-[25px] mx-8`}>
-              <Link href={"/"}>Hong Engineering</Link>
+              <Link href={"/"}>
+                <span className="text-container">Hong Engineering</span>
+              </Link>
             </h1>
             <p className={`absolute top-8 right-14 sm:right-5 `}>
               <DarkModeButton />
@@ -41,12 +43,12 @@ const Layout = ({ children }: Wrapper) => {
             <ul className=" flex">
               <li className={`hidden sm:block font-semibold text-[25px] mx-4`}>
                 <Link href={"/blog"}>
-                  <span>Blog</span>
+                  <span className="text-container"> Blog</span>
                 </Link>
               </li>
               <li className={`hidden sm:block font-semibold text-[25px] mx-4`}>
                 <Link href={"/career"}>
-                  <span>Career</span>
+                  <span className="text-container">Career</span>
                 </Link>
               </li>
 
@@ -192,6 +194,24 @@ const Layout = ({ children }: Wrapper) => {
           .nav_closed {
             transform: translateY(-100%);
             transition: transform 0.3s ease-in-out;
+          }
+          .text-container {
+            position: relative;
+          }
+
+          .text-container::before {
+            content: "";
+            position: absolute;
+            bottom: -30%;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background-color: white;
+            transition: width 0.3s ease;
+          }
+
+          .text-container:hover::before {
+            width: 100%; /* 호버 시 가로 크기를 100%로 늘려 라인이 나타나도록 함 */
           }
         `}
       </style>

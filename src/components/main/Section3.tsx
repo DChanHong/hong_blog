@@ -47,9 +47,9 @@ const Section3 = () => {
       >
         <Link href={"/blog"}>
           <h2
-            className={`font-bold  text-[40px] md:text-[50px] 3xl:text-[60px] 6xl:text-[70px] mb-4 pb-4 border-b-2`}
+            className={` font-bold mb-4 text-[40px] md:text-[50px] 3xl:text-[60px] 6xl:text-[70px] pb-4 border-b-2`}
           >
-            My Blog List
+            <span className="text-container">My Blog List</span>
           </h2>
         </Link>
         {!blogList ? (
@@ -133,6 +133,28 @@ const Section3 = () => {
           </div>
         )}
       </div>
+      <style jsx>
+        {`
+          .text-container {
+            position: relative;
+          }
+
+          .text-container::before {
+            content: "";
+            position: absolute;
+            bottom: -20%;
+            left: 0;
+            width: 0;
+            height: 4px;
+            background-color: black;
+            transition: width 0.3s ease;
+          }
+
+          .text-container:hover::before {
+            width: 100%;
+          }
+        `}
+      </style>
     </div>
   );
 };
