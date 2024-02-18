@@ -3,6 +3,8 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import moment from "moment";
 import Layout from "../../components/commons/Layout";
+import { useQuery } from "@tanstack/react-query";
+
 import { IoSearch } from "react-icons/io5";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,7 +19,6 @@ const Index = () => {
   const [blogList, setBlogList] = useState<blogListDto[] | null>(null);
   const [filterList, setFilterList] = useState<blogListDto[] | null>(null);
   const [tagList, setTagList] = useState<string[] | null>(null);
-
   const searchRef = useRef<HTMLInputElement>(null);
 
   const getBlogList = async () => {
@@ -26,7 +27,14 @@ const Index = () => {
       setBlogList(result.data.data);
       setFilterList(result.data.data);
     }
+    return result.data.data;
   };
+
+  const { data, status } = useQuery({
+    queryKey: ["blog_list"],
+    queryFn: getBlogList,
+  });
+
   useEffect(() => {
     if (blogList) {
       let uniqueArray: string[] = Array.from(
@@ -37,8 +45,11 @@ const Index = () => {
   }, [blogList]);
 
   useEffect(() => {
-    getBlogList();
-  }, [pathname]);
+    if (data) {
+      setBlogList(data);
+      setFilterList(data);
+    }
+  }, [data]);
 
   const searchList = () => {
     if (searchRef.current && blogList) {
@@ -184,7 +195,7 @@ const Index = () => {
                   </button>
                 </div>
                 <div>
-                  <p className="hidden lg:block text-center mt-4 text-[1.8em] font-bold">
+                  <p className="hidden lg:block text-center my-4 text-[1.8em] font-bold">
                     Tags
                   </p>
                   <div

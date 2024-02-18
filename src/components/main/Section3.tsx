@@ -4,6 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import moment from "moment";
+import { useQuery } from "@tanstack/react-query";
 
 import { htmlTagRemove } from "@/utils/blogList";
 import { truncateText } from "@/utils/blogList";
@@ -21,14 +22,19 @@ const Section3 = () => {
 
   const getBlogList = async () => {
     const result = await axios.get(`http://localhost:1337/api/blog-posts`);
-    if (result) {
-      setBlogList(result.data.data);
-    }
+    return result.data.data;
   };
 
+  const { data, status } = useQuery({
+    queryKey: ["blog_list"],
+    queryFn: getBlogList,
+  });
+
   useEffect(() => {
-    getBlogList();
-  }, [pathname]);
+    if (data) {
+      setBlogList(data);
+    }
+  }, [data]);
 
   return (
     <div

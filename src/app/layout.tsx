@@ -1,6 +1,6 @@
 import "@/public/styles/global.css";
 import DarkModeProvider from "@/components/dark/DarkModeProvider";
-import { DarkModeButton } from "@/components/dark/DarkModeButton";
+import QueryClientProvider from "@/utils/ReactQueryClientProvider";
 
 export const metadata = {
   title: "",
@@ -15,9 +15,11 @@ export default function RootLayout({
   return (
     <html lang="ko-KR">
       <body className="">
-        <DarkModeProvider attribute="class" defaultTheme="system">
-          {children}
-        </DarkModeProvider>
+        <QueryClientProvider>
+          <DarkModeProvider attribute="class" defaultTheme="system">
+            {children}
+          </DarkModeProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

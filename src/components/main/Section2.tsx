@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import useElementObserve from "@/hooks/useElementObserve";
+
 import Link from "next/link";
 
 const Section2 = () => {
