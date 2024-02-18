@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Layout from "@/components/commons/Layout";
 import DOMPurify from "dompurify";
 import { useQuery } from "@tanstack/react-query";
+import Loader from "@/components/commons/Loader";
 
 const Index = ({ params }: { params: { blog_data: string[] } }) => {
   // console.log(params.blog_data[0]);
@@ -35,7 +36,7 @@ const Index = ({ params }: { params: { blog_data: string[] } }) => {
     <Layout>
       <div className={`mt-[100px]`}>
         {!blogObj ? (
-          <>loading...</>
+          <Loader />
         ) : (
           <div className={`flex justify-center p-4 mt-20`}>
             <div

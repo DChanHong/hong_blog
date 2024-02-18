@@ -4,6 +4,7 @@ import axios from "axios";
 import moment from "moment";
 import Layout from "../../components/commons/Layout";
 import { useQuery } from "@tanstack/react-query";
+import Loader from "@/components/commons/Loader";
 
 import { IoSearch } from "react-icons/io5";
 import Image from "next/image";
@@ -94,7 +95,7 @@ const Index = () => {
         <div className="max-w-[1800px] w-11/12 m-auto md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-11/12 mt-10 m-auto">
           <div className="flex flex-col-reverse  lg:flex-row justify-between">
             {!filterList || !blogList || !tagList ? (
-              <>loading...</>
+              <Loader />
             ) : (
               <div className={`w-full lg:w-9/12 flex flex-col justify-center`}>
                 {filterList.map((item: blogListDto, index: number) => (

@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
+import Loader from "../commons/Loader";
 
 import { htmlTagRemove } from "@/utils/blogList";
 import { truncateText } from "@/utils/blogList";
@@ -52,7 +53,7 @@ const Section3 = () => {
           </h2>
         </Link>
         {!blogList ? (
-          <>loading...</>
+          <Loader />
         ) : (
           <div className={`flex flex-col justify-center`}>
             {blogList.map((item: blogListDto, index: number) => (
