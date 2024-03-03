@@ -1,5 +1,5 @@
 import axios from "axios";
-import { blogListDto } from "@/dataDto/blogDto";
+import { blogListRes } from "@/dataDto/blogDto";
 import { usePathname, useRouter } from "next/navigation";
 import Layout from "@/components/commons/Layout";
 import DOMPurify from "isomorphic-dompurify";
@@ -18,7 +18,7 @@ async function getData(id: string) {
 }
 
 const Index = async ({ params }: { params: { blog_data: string[] } }) => {
-  const data: blogListDto = await getData(params.blog_data[0]);
+  const data: blogListRes = await getData(params.blog_data[0]);
 
   return (
     <Layout>
@@ -27,7 +27,7 @@ const Index = async ({ params }: { params: { blog_data: string[] } }) => {
           <div
             className="prose w-full border-2 rounded-xl p-2 3xs:p-6 sm:p-10 dark:!text-[#b7babe] mt-[30px]"
             dangerouslySetInnerHTML={{
-              __html: DOMPurify.sanitize(data?.attributes?.content),
+              __html: DOMPurify.sanitize(data?.content),
             }}
           />
         </div>

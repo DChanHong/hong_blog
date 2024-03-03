@@ -10,15 +10,15 @@ import { IoSearch } from "react-icons/io5";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { blogListDto } from "@/dataDto/blogDto";
+import { blogListRes } from "@/dataDto/blogDto";
 import { htmlTagRemove } from "@/utils/blogList";
 import { truncateText } from "@/utils/blogList";
 
 const Index = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const [blogList, setBlogList] = useState<blogListDto[] | null>(null);
-  const [filterList, setFilterList] = useState<blogListDto[] | null>(null);
+  const [blogList, setBlogList] = useState<blogListRes[] | null>(null);
+  const [filterList, setFilterList] = useState<blogListRes[] | null>(null);
   const [tagList, setTagList] = useState<string[] | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -37,15 +37,15 @@ const Index = () => {
   });
 
   const getTest = async () => {
-    const result = await axios.get(
-      `http://localhost:1337/api/blog-posts?pagination[page]=1&pagination[pageSize]=2`
-    );
+    const result = await axios.get(`http://localhost:1337/api/blog-posts/1/1`);
+
+    // const result = await axios.get(`http://localhost:1337/api/blog-posts/9`);
     if (result) {
       console.log(result);
     }
   };
 
-  const getTest2 = async () => {
+  const getCountTest = async () => {
     const result = await axios.get(
       `http://localhost:1337/api/blog-posts/count`
     );
@@ -57,7 +57,7 @@ const Index = () => {
   useEffect(() => {
     if (blogList) {
       let uniqueArray: string[] = Array.from(
-        new Set(blogList.flatMap((item) => item.attributes.tags))
+        new Set(blogList.flatMap((item) => item.tags))
       );
       setTagList(uniqueArray);
     }
@@ -76,8 +76,8 @@ const Index = () => {
       if (searchRef.current?.value === "") {
         setFilterList(blogList);
       } else {
-        filteredList = blogList.filter((item: blogListDto) => {
-          return item.attributes.title.includes(searchRef.current?.value || "");
+        filteredList = blogList.filter((item: blogListRes) => {
+          return item.title.includes(searchRef.current?.value || "");
         });
         setFilterList(filteredList);
       }
@@ -87,7 +87,7 @@ const Index = () => {
   const tagSearch = (tag: string) => {
     if (blogList) {
       const filteredList = blogList.filter((item) => {
-        return item.attributes.tags.includes(tag);
+        return item.tags.includes(tag);
       });
       if (filteredList.length <= 0) {
         setFilterList(blogList);
@@ -112,7 +112,7 @@ const Index = () => {
         <button className="w-full boreder-2 p-4" onClick={getTest}>
           페이지 api
         </button>
-        <button className="w-full boreder-2 p-4" onClick={getTest2}>
+        <button className="w-full boreder-2 p-4" onClick={getCountTest}>
           테이블 데이터 갯수
         </button>
 
@@ -122,20 +122,20 @@ const Index = () => {
               <Loader />
             ) : (
               <div className={`w-full lg:w-9/12 flex flex-col justify-center`}>
-                {filterList.map((item: blogListDto, index: number) => (
+                {filterList.map((item: blogListRes, index: number) => (
                   <Link
                     key={index}
-                    href={`/blog/${item.id}/${item.attributes.title}`}
+                    href={`/blog/${item.id}/${item.title}`}
                     className="w-full "
                   >
                     <div className={`border-b-2 p-4`}>
                       <div className="font-bold text-[1.8em] my-4">
-                        {item.attributes.title}
+                        {item.title}
                       </div>
                       <div className="flex flex-col md:flex-row pb-4">
                         <div className="mr-6 w-full md:w-3/12 h-full flex md:block">
                           <Image
-                            src={`http://localhost:1337/uploads/${item.attributes.thumbnail_img_link}`}
+                            src={`http://localhost:1337/uploads/${item.thumbnail_img_link}`}
                             alt="썸네일 이미지"
                             className={`w-4/12 xs:w-1/2 md:w-full h-[100px] xs:h-[150px] md:h-[200px]`}
                             width={200}
@@ -146,18 +146,16 @@ const Index = () => {
                           >
                             <li>
                               <span className="text-[16px] md:text-[26px]">
-                                {item.attributes.creator}
+                                {item.creator}
                               </span>
                             </li>
                             <li>
                               <span className="text-[13px] md:text-[16px] text-[#828282]">
-                                {moment(item.attributes.createdAt).format(
-                                  "YYYY-MM-DD"
-                                )}
+                                {moment(item.createdAt).format("YYYY-MM-DD")}
                               </span>
                             </li>
                             <li className="text-[#828282] flex space-x-1.5 text-[15px] md:text-[20px]">
-                              <span>{item.attributes.intro}</span>
+                              <span>{item.intro}</span>
                               {/* {item.attributes.tags.map(
                             (tag: string, index: number) => (
                               <span key={index}>#{tag}</span>
@@ -171,27 +169,20 @@ const Index = () => {
                           <ul className="hidden md:flex flex-col space-y-1">
                             <li>
                               <span className="text-[26px]">
-                                {item.attributes.creator}
+                                {item.creator}
                               </span>
                               <span className="text-[16px] ml-2 text-[#828282]">
-                                {moment(item.attributes.createdAt).format(
-                                  "YYYY-MM-DD"
-                                )}
+                                {moment(item.createdAt).format("YYYY-MM-DD")}
                               </span>
                             </li>
                             <li className="text-[#828282] flex space-x-1.5 text-[20px]">
-                              <span>{item.attributes.intro}</span>
-                              {item.attributes.tags.map(
-                                (tag: string, index: number) => (
-                                  <span key={index}>#{tag}</span>
-                                )
-                              )}
+                              <span>{item.intro}</span>
+                              {item.tags.map((tag: string, index: number) => (
+                                <span key={index}>#{tag}</span>
+                              ))}
                             </li>
                             <li className="text-[20px]">
-                              {truncateText(
-                                htmlTagRemove(item.attributes.content),
-                                200
-                              )}
+                              {truncateText(htmlTagRemove(item.content), 200)}
                             </li>
                           </ul>
                         </div>
