@@ -13,3 +13,7 @@
   --foreground: white;
   --text-color: #b7babe;
 }
+
+.prose {
+  max-width: fit-content;
+}

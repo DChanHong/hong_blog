@@ -35,6 +35,25 @@ const Index = () => {
     queryKey: ["blog_list"],
     queryFn: getBlogList,
   });
+  console.log(data);
+
+  const getTest = async () => {
+    const result = await axios.get(
+      `http://localhost:1337/api/blog-posts?pagination[page]=1&pagination[pageSize]=2`
+    );
+    if (result) {
+      console.log(result);
+    }
+  };
+
+  const getTest2 = async () => {
+    const result = await axios.get(
+      `http://localhost:1337/api/blog-posts/count`
+    );
+    if (result) {
+      console.log(result);
+    }
+  };
 
   useEffect(() => {
     if (blogList) {
@@ -91,6 +110,12 @@ const Index = () => {
         <div className="flex items-center justify-center font-bold text-center text-[26px] xs:text-[46px] md:text-[70px] h-[50vh] md:h-[70vh] bg-[#010118] mt-[100px] text-white">
           <p className="text-white">Blog</p>
         </div>
+        <button className="w-full boreder-2 p-4" onClick={getTest}>
+          페이지 api
+        </button>
+        <button className="w-full boreder-2 p-4" onClick={getTest2}>
+          테이블 데이터 갯수
+        </button>
 
         <div className="max-w-[1800px] w-11/12 m-auto md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-11/12 mt-10 m-auto">
           <div className="flex flex-col-reverse  lg:flex-row justify-between">

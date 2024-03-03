@@ -1,52 +1,36 @@
-"use client";
-import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { blogListDto } from "@/dataDto/blogDto";
 import { usePathname, useRouter } from "next/navigation";
 import Layout from "@/components/commons/Layout";
-import DOMPurify from "dompurify";
-import { useQuery } from "@tanstack/react-query";
-import Loader from "@/components/commons/Loader";
+import DOMPurify from "isomorphic-dompurify";
 
-const Index = ({ params }: { params: { blog_data: string[] } }) => {
-  // console.log(params.blog_data[0]);
-  const pathname = usePathname();
-  const router = useRouter();
-  const [blogObj, setBlogObj] = useState<blogListDto | null>(null);
-
-  const fetchData = async () => {
+async function getData(id: string) {
+  try {
     const result = await axios.get(
-      `http://localhost:1337/api/blog-posts/${params.blog_data[0]}`
+      `http://localhost:1337/api/blog-posts/${id}}`
     );
-    return result.data.data;
-  };
+    if (result) {
+      return result.data.data;
+    } else false;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
-  const { data, status } = useQuery({
-    queryKey: ["blog_list", params.blog_data[0]],
-    queryFn: fetchData,
-  });
-
-  useEffect(() => {
-    if (data) {
-      setBlogObj(data);
-    }
-  }, [data]);
+const Index = async ({ params }: { params: { blog_data: string[] } }) => {
+  const data: blogListDto = await getData(params.blog_data[0]);
 
   return (
     <Layout>
       <div className={`mt-[100px]`}>
-        {!blogObj ? (
-          <Loader />
-        ) : (
-          <div className={`flex justify-center p-4 mt-20`}>
-            <div
-              className="prose full-width dark:!text-[#b7babe]"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(blogObj.attributes.content),
-              }}
-            />
-          </div>
-        )}
+        <div className={`flex justify-center`}>
+          <div
+            className="prose w-full border-2 rounded-xl p-2 3xs:p-6 sm:p-10 dark:!text-[#b7babe] mt-[30px]"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(data?.attributes?.content),
+            }}
+          />
+        </div>
       </div>
     </Layout>
   );

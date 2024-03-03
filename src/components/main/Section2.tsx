@@ -10,7 +10,6 @@ const Section2 = () => {
   return (
     <div
       className={`w-full max-w-[1800px] m-auto flex justify-center mt-[150px] mb-20 ${flagClass}`}
-      ref={targetRef}
     >
       <div
         className={` w-11/12 md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-11/12 p-4`}
@@ -22,7 +21,7 @@ const Section2 = () => {
             <span className="text-container">Career</span>
           </h2>
         </Link>
-        <div className={`flex`}>
+        <div className={`flex`} ref={targetRef}>
           <div className="w-4/12 flex pr-2 mx-2 flex-col border-r-2">
             <p className=" text-[20px] md:text-[30px] 3xl:text-[40px] 6xl:text-[50px] text-center">
               (주) 현회사

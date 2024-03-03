@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko-KR">
-      <body className="">
+      <body>
         <QueryClientProvider>
           <DarkModeProvider attribute="class" defaultTheme="system">
             {children}
