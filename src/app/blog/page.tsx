@@ -35,7 +35,6 @@ const Index = () => {
     queryKey: ["blog_list"],
     queryFn: getBlogList,
   });
-  console.log(data);
 
   const getTest = async () => {
     const result = await axios.get(
