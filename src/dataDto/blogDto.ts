@@ -12,7 +12,7 @@ export interface blogListRes {
   thumbnail_img_link: string;
 }
 
-// 안 씀
+//
 export interface blogAttributesDto {
   title: string;
   category: string;
