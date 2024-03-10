@@ -220,9 +220,11 @@ const Index = () => {
                           if (searchRef.current?.value !== "") {
                             setSearch(searchRef.current?.value);
                             setTag("");
+                            setPage(1);
                           } else {
                             setSearch("");
                             setTag("");
+                            setPage(1);
                           }
                         }
                       }}
@@ -245,6 +247,7 @@ const Index = () => {
                           onClick={() => {
                             setTag(item.attributes.tag_name);
                             setSearch("");
+                            setPage(1);
                           }}
                         >
                           #{item.attributes.tag_name}
