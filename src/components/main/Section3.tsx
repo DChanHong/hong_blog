@@ -1,11 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import React, { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import moment from "moment";
-import { useQuery } from "@tanstack/react-query";
-import Loader from "../commons/Loader";
 
 import { htmlTagRemove } from "@/utils/blogList";
 import { truncateText } from "@/utils/blogList";
@@ -19,8 +16,6 @@ interface props {
 }
 
 const Section3 = ({ blogList }: props) => {
-  const pathname = usePathname();
-  const router = useRouter();
   const targetRef = useRef<HTMLDivElement>(null);
   const { flag, flagClass } = useElementObserve(targetRef);
 

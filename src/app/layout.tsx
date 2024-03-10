@@ -1,6 +1,6 @@
 import "@/public/styles/global.css";
 import DarkModeProvider from "@/components/dark/DarkModeProvider";
-import QueryClientProvider from "@/utils/ReactQueryClientProvider";
+import QueryClientProvider from "@/components/provide/ReactQueryClientProvider";
 
 export const metadata = {
   title: "",
