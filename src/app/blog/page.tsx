@@ -3,7 +3,8 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import moment from "moment";
 import Layout from "../../components/commons/Layout";
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 import Loader from "@/components/commons/Loader";
 
 import { IoSearch } from "react-icons/io5";
@@ -17,6 +18,8 @@ import { truncateText } from "@/utils/blogList";
 const Index = () => {
   const pathname = usePathname();
   const router = useRouter();
+  const params = useSearchParams();
+  console.log(params.get("page"));
 
   // 블로그
   const [blogList, setBlogList] = useState<blogListRes[] | null>(null);
@@ -24,21 +27,23 @@ const Index = () => {
 
   // 이것도 API 고민이 필요할 듯 함.
   const [tagList, setTagList] = useState<string[] | null>(null);
-
   //검색어 체크
   const searchRef = useRef<HTMLInputElement>(null);
-
   // 페이지 초기값
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(
+    params.get("page") ? Number(params.get("page")) : 1
+  );
   // 몇 개씩 볼것인지
   const [viewCount, setViewCount] = useState<number>(5);
   // 현재 임의의 토탈 데이터 수
   const [totalData, setTotalData] = useState<number>(100);
-
+  // UI에 보여줄 페이지리스트
   const [pageNumbers, setPageNumbers] = useState<number[] | null>(null);
 
   const getBlogPageList = async () => {
-    const result = await axios.get(`http://localhost:1337/api/blog-posts/1/1`);
+    const result = await axios.get(
+      `http://localhost:1337/api/blog-posts/${page}/${viewCount}`
+    );
     if (result) {
       return result.data;
     }
@@ -54,8 +59,8 @@ const Index = () => {
   };
   const queryResult = useQueries({
     queries: [
-      { queryKey: ["page_count"], queryFn: getCount },
-      { queryKey: ["test_page"], queryFn: getBlogPageList },
+      { queryKey: [viewCount], queryFn: getCount },
+      { queryKey: [page, viewCount], queryFn: getBlogPageList },
     ],
   });
 
@@ -69,12 +74,27 @@ const Index = () => {
   }, [pageList]);
 
   useEffect(() => {
-    // 데이터 갯수가 들어왔다.
-    console.log(CountData);
     if (CountData) {
-      getPageNumbers(3, 100, 5);
+      getPageNumbers(page, Math.ceil(CountData / viewCount), viewCount);
+      // getPageNumbers(page, 2, viewCount);
     }
   }, [CountData]);
+
+  useEffect(() => {
+    setPage(params.get("page") ? Number(params.get("page")) : 1);
+  }, [params]);
+
+  const handlePage = (state: string) => {
+    if (state === "prev" && page !== 1) {
+      router.push(`${pathname}?page=${page - 1}`);
+    } else if (state === "next" && Math.ceil(CountData / viewCount) !== page) {
+      router.push(`${pathname}?page=${page + 1}`);
+    }
+  };
+  const handlePageButton = (curretPage: number) => {
+    router.push(`${pathname}?page=${curretPage}`);
+  };
+
   const getPageNumbers = (
     currentPage: number,
     totalPages: number,
@@ -137,6 +157,8 @@ const Index = () => {
   //     searchList();
   //   }
   // };
+
+  //  페이징 함수
 
   return (
     <Layout>
@@ -246,20 +268,35 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <div className={`border-2 flex space-x-1`}>
-              <button>이전</button>
+            <div className={`mt-6 flex justify-center`}>
+              <button
+                type="button"
+                onClick={() => handlePage("prev")}
+                className={`border-y-2 border-l-2 px-2 py-1 hover:bg-[#17112B] hover:text-white hover:border-[#17112B]`}
+              >
+                이전
+              </button>
               {pageNumbers?.map((item: number) => (
                 <button
-                  className={`text-[16px] p-2 border-2 rounded-xl hover:border-red-400 ${
-                    page === item ? "text-red-400" : ""
+                  type="button"
+                  onClick={() => handlePageButton(item)}
+                  className={`text-[22px] px-3 py-1 border-y-2 border-l-2 hover:bg-[#17112B] hover:text-white hover:border-[#17112B] ${
+                    page === item
+                      ? "bg-[#17112B] text-white border-[#17112B]"
+                      : ""
                   }`}
-                  onClick={() => getPageNumbers(item, totalData, viewCount)}
                   key={item}
                 >
                   {item}
                 </button>
               ))}
-              <button>다음</button>
+              <button
+                type="button"
+                onClick={() => handlePage("next")}
+                className={`border-y-2 border-2 px-2 py-1 hover:bg-[#17112B] hover:text-white hover:border-[#17112B]`}
+              >
+                다음
+              </button>
             </div>
           </div>
         )}
