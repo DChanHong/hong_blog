@@ -1,41 +1,23 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import React, { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import moment from "moment";
-import { useQuery } from "@tanstack/react-query";
-import Loader from "../commons/Loader";
 
 import { htmlTagRemove } from "@/utils/blogList";
 import { truncateText } from "@/utils/blogList";
 
 import { usePathname, useRouter } from "next/navigation";
-import { blogListDto, blogListRes } from "@/dataDto/blogDto";
+import { blogListRes } from "@/dataDto/blogDto";
 import useElementObserve from "@/hooks/useElementObserve";
 
-const Section3 = () => {
-  const pathname = usePathname();
-  const router = useRouter();
+interface props {
+  blogList: blogListRes[];
+}
+
+const Section3 = ({ blogList }: props) => {
   const targetRef = useRef<HTMLDivElement>(null);
   const { flag, flagClass } = useElementObserve(targetRef);
-  const [blogList, setBlogList] = useState<blogListRes[] | null>(null);
-
-  const getBlogList = async () => {
-    const result = await axios.get(`http://localhost:1337/api/blog-posts`);
-    return result.data.data;
-  };
-
-  const { data, status, error } = useQuery({
-    queryKey: ["blog_list"],
-    queryFn: getBlogList,
-  });
-
-  useEffect(() => {
-    if (data) {
-      setBlogList(data);
-    }
-  }, [data]);
 
   return (
     <div
@@ -52,11 +34,9 @@ const Section3 = () => {
             <span className="text-container">My Blog List</span>
           </h2>
         </Link>
-        {!blogList ? (
-          <Loader />
-        ) : (
-          <div className={`flex flex-col justify-center`}>
-            {blogList.map((item: blogListRes, index: number) => (
+        <div className={`flex flex-col justify-center`}>
+          {blogList &&
+            blogList.map((item: blogListRes, index: number) => (
               <Link
                 key={index}
                 href={`/blog/${item.id}/${item.title}`}
@@ -114,8 +94,7 @@ const Section3 = () => {
                 </div>
               </Link>
             ))}
-          </div>
-        )}
+        </div>
       </div>
       <style jsx>
         {`

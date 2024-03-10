@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import axios from "axios";
+
 import moment from "moment";
 import Layout from "../../components/commons/Layout";
-import { useQuery, useQueries } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 import Loader from "@/components/commons/Loader";
 
 import { IoSearch } from "react-icons/io5";
@@ -11,56 +12,45 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { blogListRes } from "@/dataDto/blogDto";
+import { tagListRes } from "@/dataDto/tagDto";
 import { htmlTagRemove } from "@/utils/blogList";
 import { truncateText } from "@/utils/blogList";
+import { getBlogPageList, getCount, getTagList } from "@/hooks/blogApi.ts/blog";
 
 const Index = () => {
   const pathname = usePathname();
   const router = useRouter();
+  const params = useSearchParams();
 
-  // 블로그
   const [blogList, setBlogList] = useState<blogListRes[] | null>(null);
-  // const [filterList, setFilterList] = useState<blogListRes[] | null>(null);
-
-  // 이것도 API 고민이 필요할 듯 함.
-  const [tagList, setTagList] = useState<string[] | null>(null);
-
-  //검색어 체크
+  const [tagList, setTagList] = useState<tagListRes[] | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
-
-  // 페이지 초기값
-  const [page, setPage] = useState<number>(1);
-  // 몇 개씩 볼것인지
+  const [page, setPage] = useState<number>(
+    params.get("page") ? Number(params.get("page")) : 1
+  );
   const [viewCount, setViewCount] = useState<number>(5);
-  // 현재 임의의 토탈 데이터 수
   const [totalData, setTotalData] = useState<number>(100);
-
   const [pageNumbers, setPageNumbers] = useState<number[] | null>(null);
+  const [search, setSearch] = useState<string>("");
+  const [tag, setTag] = useState<string>("");
 
-  const getBlogPageList = async () => {
-    const result = await axios.get(`http://localhost:1337/api/blog-posts/1/1`);
-    if (result) {
-      return result.data;
-    }
-  };
-
-  const getCount = async () => {
-    const result = await axios.get(
-      "http://localhost:1337/api/blog-posts/count"
-    );
-    if (result.status === 200) {
-      return result.data;
-    }
-  };
   const queryResult = useQueries({
     queries: [
-      { queryKey: ["page_count"], queryFn: getCount },
-      { queryKey: ["test_page"], queryFn: getBlogPageList },
+      {
+        queryKey: [tag, search, tag, search],
+        queryFn: () => getCount(tag, search),
+      },
+      {
+        queryKey: [page, viewCount, tag, search],
+        queryFn: () => getBlogPageList(page, viewCount, tag, search),
+      },
+      { queryKey: ["tag_list"], queryFn: getTagList },
     ],
   });
 
   const { data: CountData, status: CountStatus } = queryResult[0];
   const { data: pageList, status: PageStatus } = queryResult[1];
+  const { data: tagLists, status: tagStatus } = queryResult[2];
 
   useEffect(() => {
     if (pageList) {
@@ -69,12 +59,33 @@ const Index = () => {
   }, [pageList]);
 
   useEffect(() => {
-    // 데이터 갯수가 들어왔다.
-    console.log(CountData);
     if (CountData) {
-      getPageNumbers(3, 100, 5);
+      getPageNumbers(page, Math.ceil(CountData / viewCount), viewCount);
+      // getPageNumbers(page, 2, viewCount);
     }
   }, [CountData]);
+
+  useEffect(() => {
+    if (tagLists) {
+      setTagList(tagLists);
+    }
+  }, [tagLists]);
+
+  useEffect(() => {
+    setPage(params.get("page") ? Number(params.get("page")) : 1);
+  }, [params]);
+
+  const handlePage = (state: string) => {
+    if (state === "prev" && page !== 1) {
+      router.push(`${pathname}?page=${page - 1}`);
+    } else if (state === "next" && Math.ceil(CountData / viewCount) !== page) {
+      router.push(`${pathname}?page=${page + 1}`);
+    }
+  };
+  const handlePageButton = (curretPage: number) => {
+    router.push(`${pathname}?page=${curretPage}`);
+  };
+
   const getPageNumbers = (
     currentPage: number,
     totalPages: number,
@@ -105,38 +116,19 @@ const Index = () => {
     setPageNumbers(pageNumberArr);
   };
 
-  // const searchList = () => {
-  //   if (searchRef.current && blogList) {
-  //     let filteredList;
-  //     if (searchRef.current?.value === "") {
-  //       setFilterList(blogList);
-  //     } else {
-  //       filteredList = blogList.filter((item: blogListRes) => {
-  //         return item.title.includes(searchRef.current?.value || "");
-  //       });
-  //       setFilterList(filteredList);
-  //     }
-  //   }
-  // };
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && searchRef.current) {
+      if (searchRef.current?.value !== "") {
+        setSearch(searchRef.current?.value);
+        setTag("");
+      } else {
+        setSearch("");
+        setTag("");
+      }
+    }
+  };
 
-  // const tagSearch = (tag: string) => {
-  //   if (blogList) {
-  //     const filteredList = blogList.filter((item) => {
-  //       return item.tags.includes(tag);
-  //     });
-  //     if (filteredList.length <= 0) {
-  //       setFilterList(blogList);
-  //     } else {
-  //       setFilterList(filteredList);
-  //     }
-  //   }
-  // };
-
-  // const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (e.key === "Enter") {
-  //     searchList();
-  //   }
-  // };
+  //  페이징 함수
 
   return (
     <Layout>
@@ -144,7 +136,7 @@ const Index = () => {
         <div className="flex items-center justify-center font-bold text-center text-[26px] xs:text-[46px] md:text-[70px] h-[50vh] md:h-[70vh] bg-[#010118] mt-[100px] text-white">
           <p className="text-white">Blog</p>
         </div>
-        {!blogList || CountStatus !== "success" ? (
+        {!blogList || !tagList || CountStatus !== "success" ? (
           <Loader />
         ) : (
           <div className="max-w-[1800px] w-11/12  m-auto md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-11/12 mt-10 m-auto">
@@ -218,12 +210,22 @@ const Index = () => {
                       className="mx-2 p-1 outline-none w-11/12 w-full h-full rounded-xl p-2 dark:bg-[#232323]"
                       ref={searchRef}
                       type="text"
-                      onKeyUp={() => {}}
+                      onKeyUp={handleKeyUp}
                       placeholder="Search for Title"
                     />
                     <button
                       type="button"
-                      onClick={() => {}}
+                      onClick={() => {
+                        if (searchRef.current) {
+                          if (searchRef.current?.value !== "") {
+                            setSearch(searchRef.current?.value);
+                            setTag("");
+                          } else {
+                            setSearch("");
+                            setTag("");
+                          }
+                        }
+                      }}
                       className={`w-/12`}
                     >
                       <IoSearch size={30} />
@@ -236,9 +238,16 @@ const Index = () => {
                     <div
                       className={`flex flex-row   mt-2 space-x-1 ml-4 lg:ml-0 lg:mt-0 lg:flex-col lg:space-y-1 text-[#858585]`}
                     >
-                      {tagList?.map((item: string, index: number) => (
-                        <button key={index} type="button" onClick={() => {}}>
-                          #{item}
+                      {tagList.map((item: tagListRes, index: number) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => {
+                            setTag(item.attributes.tag_name);
+                            setSearch("");
+                          }}
+                        >
+                          #{item.attributes.tag_name}
                         </button>
                       ))}
                     </div>
@@ -246,20 +255,35 @@ const Index = () => {
                 </div>
               </div>
             </div>
-            <div className={`border-2 flex space-x-1`}>
-              <button>이전</button>
+            <div className={`mt-6 flex justify-center`}>
+              <button
+                type="button"
+                onClick={() => handlePage("prev")}
+                className={`border-y-2 border-l-2 px-2 py-1 hover:bg-[#17112B] hover:text-white hover:border-[#17112B]`}
+              >
+                이전
+              </button>
               {pageNumbers?.map((item: number) => (
                 <button
-                  className={`text-[16px] p-2 border-2 rounded-xl hover:border-red-400 ${
-                    page === item ? "text-red-400" : ""
+                  type="button"
+                  onClick={() => handlePageButton(item)}
+                  className={`text-[22px] px-3 py-1 border-y-2 border-l-2 hover:bg-[#17112B] hover:text-white hover:border-[#17112B] ${
+                    page === item
+                      ? "bg-[#17112B] text-white border-[#17112B]"
+                      : ""
                   }`}
-                  onClick={() => getPageNumbers(item, totalData, viewCount)}
                   key={item}
                 >
                   {item}
                 </button>
               ))}
-              <button>다음</button>
+              <button
+                type="button"
+                onClick={() => handlePage("next")}
+                className={`border-y-2 border-2 px-2 py-1 hover:bg-[#17112B] hover:text-white hover:border-[#17112B]`}
+              >
+                다음
+              </button>
             </div>
           </div>
         )}
@@ -269,15 +293,3 @@ const Index = () => {
 };
 
 export default Index;
-
-/* 
-
-  <li className="text-[#828282] flex space-x-1.5 text-[15px] md:text-[20px]">
-    <span>{item.intro}</span>
-    {item.attributes.tags.map(
-      (tag: string, index: number) => (
-        <span key={index}>#{tag}</span>
-      )
-    )}
-  </li>
-    */
