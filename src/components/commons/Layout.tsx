@@ -11,6 +11,8 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
 import { IoSearch } from "react-icons/io5";
 import { SiVelog } from "react-icons/si";
+// import { RouteChangeLoader } from "@/hooks/loadingHandler";
+import Loader from "./Loader";
 
 interface Wrapper {
   children: React.ReactNode;
@@ -19,6 +21,9 @@ interface Wrapper {
 const Layout = ({ children }: Wrapper) => {
   const [navData, setNavData] = useState<string>("");
   const [sideNavBar, setSideNavBar] = useState<boolean>(false);
+
+  // const [pageMoveLoading, setPageMoveLoading] = useState<boolean>(false);
+  // RouteChangeLoader(setPageMoveLoading);
 
   return (
     <>

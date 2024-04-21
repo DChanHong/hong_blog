@@ -6,8 +6,9 @@ import DOMPurify from "isomorphic-dompurify";
 
 async function getData(id: string) {
   try {
+    const NEXT_PUBLIC_API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN ?? "";
     const result = await axios.get(
-      `http://localhost:1337/api/blog-posts/${id}}`
+      `${NEXT_PUBLIC_API_DOMAIN}/api/blog-posts/${id}}`
     );
     if (result) {
       return result.data.data;

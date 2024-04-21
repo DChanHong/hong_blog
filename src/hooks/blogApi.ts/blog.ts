@@ -1,5 +1,6 @@
 import axios from "axios";
 
+const NEXT_PUBLIC_API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN ?? "";
 export const getBlogPageList = async (
   page: number,
   viewCount: number,
@@ -7,7 +8,7 @@ export const getBlogPageList = async (
   search: string
 ) => {
   const result = await axios.get(
-    `http://localhost:1337/api/blog-posts/${page}/${viewCount}/${
+    `${NEXT_PUBLIC_API_DOMAIN}/api/blog-posts/${page}/${viewCount}/${
       tag === "" ? "blank" : tag
     }/${search === "" ? "blank" : search}`
   );
@@ -16,15 +17,15 @@ export const getBlogPageList = async (
 
 export const getCount = async (tag: string, search: string) => {
   const result = await axios.get(
-    `http://localhost:1337/api/blog-posts/count/${tag === "" ? "blank" : tag}/${
-      search === "" ? "blank" : search
-    }`
+    `${NEXT_PUBLIC_API_DOMAIN}/api/blog-posts/count/${
+      tag === "" ? "blank" : tag
+    }/${search === "" ? "blank" : search}`
   );
   return result.data;
 };
 
 export const getTagList = async () => {
-  const result = await axios.get("http://localhost:1337/api/tags");
+  const result = await axios.get(`${NEXT_PUBLIC_API_DOMAIN}/api/tags`);
 
   return result.data.data;
 };
