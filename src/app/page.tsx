@@ -22,6 +22,7 @@ export default function Home() {
   });
 
   const { data: blogList, status: BlogListStatus } = queryResult[0];
+  console.log(blogList);
 
   return (
     <Layout>

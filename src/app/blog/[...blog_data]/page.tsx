@@ -5,11 +5,13 @@ import Layout from "@/components/commons/Layout";
 import DOMPurify from "isomorphic-dompurify";
 
 async function getData(id: string) {
+  console.log(id);
   try {
     const NEXT_PUBLIC_API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN ?? "";
     const result = await axios.get(
       `${NEXT_PUBLIC_API_DOMAIN}/api/blog-posts/${id}}`
     );
+
     if (result) {
       return result.data.data;
     } else false;
