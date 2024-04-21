@@ -1,6 +1,7 @@
 import "@/public/styles/global.css";
 import DarkModeProvider from "@/components/dark/DarkModeProvider";
 import QueryClientProvider from "@/components/provide/ReactQueryClientProvider";
+import { ChatBot } from "@/components/ chatbot/ChatBot";
 
 export const metadata = {
   title: "",
@@ -17,6 +18,7 @@ export default function RootLayout({
       <body>
         <QueryClientProvider>
           <DarkModeProvider attribute="class" defaultTheme="system">
+            <ChatBot />
             {children}
           </DarkModeProvider>
         </QueryClientProvider>
