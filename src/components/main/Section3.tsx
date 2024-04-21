@@ -16,6 +16,8 @@ interface props {
 }
 
 const Section3 = ({ blogList }: props) => {
+  const NEXT_PUBLOC_STRAPI_IMAGE_LINK =
+    process.env.NEXT_PUBLOC_STRAPI_IMAGE_LINK ?? "";
   const targetRef = useRef<HTMLDivElement>(null);
   const { flag, flagClass } = useElementObserve(targetRef);
 
@@ -49,7 +51,7 @@ const Section3 = ({ blogList }: props) => {
                   <div className="flex flex-col md:flex-row pb-4">
                     <div className="mr-6 w-full md:w-3/12 h-full flex md:block">
                       <Image
-                        src={`http://localhost:1337/uploads/${item.thumbnail_img_link}`}
+                        src={`https://strapi.chanhong.pro/uploads/${item.thumbnail_img_link}`}
                         alt="썸네일 이미지"
                         className={`w-4/12 xs:w-1/2 md:w-full h-[100px] xs:h-[150px] md:h-[200px]`}
                         width={200}
