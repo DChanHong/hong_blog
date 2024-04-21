@@ -5,7 +5,6 @@ import Layout from "@/components/commons/Layout";
 import DOMPurify from "isomorphic-dompurify";
 
 async function getData(id: string) {
-  console.log(id);
   try {
     const NEXT_PUBLIC_API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN ?? "";
     const result = await axios.get(
@@ -22,6 +21,7 @@ async function getData(id: string) {
 
 const Index = async ({ params }: { params: { blog_data: string[] } }) => {
   const data: blogListRes = await getData(params.blog_data[0]);
+  console.log(data);
 
   return (
     <Layout>
