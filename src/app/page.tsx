@@ -22,17 +22,16 @@ export default function Home() {
   });
 
   const { data: blogList, status: BlogListStatus } = queryResult[0];
-  console.log(blogList);
 
   return (
     <Layout>
       <Section1 />
       <Section2 />
-      {BlogListStatus === "success" ? (
+      {/* {BlogListStatus === "success" ? (
         <Section3 blogList={blogList} />
       ) : (
         <Loader />
-      )}
+      )} */}
     </Layout>
   );
 }
