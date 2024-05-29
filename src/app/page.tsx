@@ -23,7 +23,8 @@ export default function Home() {
 
   const { data: blogList, status: BlogListStatus } = queryResult[0];
   const test = async () => {
-    const result = await axios.get(`${NEXT_PUBLIC_API_DOMAIN}/api/velog`);
+    console.log("??/");
+    const result = await axios.post(`${NEXT_PUBLIC_API_DOMAIN}/api/velog/test`);
     console.log(result.data);
   };
 
@@ -33,7 +34,7 @@ export default function Home() {
       <button onClick={test} className="text-3xl">
         테스트 해보자
       </button>
-      <Section2 />
+      {/* <Section2 /> */}
       {/* {BlogListStatus === "success" ? (
         <Section3 blogList={blogList} />
       ) : (
