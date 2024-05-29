@@ -22,10 +22,17 @@ export default function Home() {
   });
 
   const { data: blogList, status: BlogListStatus } = queryResult[0];
+  const test = async () => {
+    const result = await axios.get(`${NEXT_PUBLIC_API_DOMAIN}/api/velog`);
+    console.log(result.data);
+  };
 
   return (
     <Layout>
       <Section1 />
+      <button onClick={test} className="text-3xl">
+        테스트 해보자
+      </button>
       <Section2 />
       {/* {BlogListStatus === "success" ? (
         <Section3 blogList={blogList} />

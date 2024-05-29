@@ -23,7 +23,7 @@ interface chatDto {
 
 export const ChatBot = () => {
   const [baollonState, setBallonState] = useState<boolean>(false);
-  const [chatState, setChatState] = useState<boolean>(true);
+  const [chatState, setChatState] = useState<boolean>(false);
 
   const chatInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -87,9 +87,10 @@ export const ChatBot = () => {
     // 이제 메세지 리스트를 뽑아온다.
     if (completeStatus) {
       const result: any = await getListMessage(thread_id);
+      const cleanedText = result.text.value.replace(/【\d+:\d+†source】/g, "");
       newGptMessageList.push({
         is_answer: true,
-        message: result.text.value,
+        message: cleanedText,
       });
       setGptMessageList(newGptMessageList);
     }
@@ -204,14 +205,6 @@ export const ChatBot = () => {
               <div className="ml-2 border-t-[4px] border-blue-500 border-solid rounded-full h-10 w-10 animate-spin" />
             )}
           </div>
-          {/* <button
-            onClick={async () => {
-              const a = await postMessage("테스트 질문", "쓰레드 아이디");
-              console.log(a);
-            }}
-          >
-            테스트
-          </button> */}
         </div>
       </div>
       <style jsx>{`
