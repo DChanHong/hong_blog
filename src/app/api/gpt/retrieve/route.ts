@@ -17,6 +17,5 @@ export async function POST(request: Request) {
 //       run_id
 //     );
 //     // 반환값에 status 보고 compelete
-//     console.log(retrieveResult);
 //     return retrieveResult.status;
 //   }
