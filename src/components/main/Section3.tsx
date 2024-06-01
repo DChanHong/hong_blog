@@ -8,6 +8,8 @@ import { htmlTagRemove } from "@/utils/blogList";
 import { truncateText } from "@/utils/blogList";
 
 import { usePathname, useRouter } from "next/navigation";
+import defaultImage from "../../public/image/default.webp";
+
 import { blogListRes } from "@/dataDto/blogDto";
 import useElementObserve from "@/hooks/useElementObserve";
 
@@ -21,9 +23,13 @@ const Section3 = ({ blogList }: props) => {
   const targetRef = useRef<HTMLDivElement>(null);
   const { flag, flagClass } = useElementObserve(targetRef);
 
+  const openblog = (link: string) => {
+    window.open(`${link}`, "_blank", "noreferrer");
+  };
+
   return (
     <div
-      className={`w-full m-auto max-w-[1800px] flex justify-center ${flagClass}`}
+      className={`w-full m-auto max-w-[1800px] flex justify-center mt-[150px] mb-20 ${flagClass}`}
       ref={targetRef}
     >
       <div
@@ -31,71 +37,69 @@ const Section3 = ({ blogList }: props) => {
       >
         <Link href={"/blog"}>
           <h2
-            className={` font-bold mb-4 text-[40px] md:text-[50px] 3xl:text-[60px] 6xl:text-[70px] pb-4 border-b-2`}
+            className={`font-bold mb-4 text-[20px] md:text-[30px] 3xl:text-[40px] 6xl:text-[50px] pb-4 border-b-2`}
           >
-            <span className="text-container">My Blog List</span>
+            <span className="text-container">Recent Blog Posts</span>
           </h2>
         </Link>
         <div className={`flex flex-col justify-center`}>
-          {blogList &&
-            blogList.map((item: blogListRes, index: number) => (
-              <Link
-                key={index}
-                href={`/blog/${item.id}/${item.title}`}
-                className="w-full "
-              >
-                <div className={`border-b-2 p-4`}>
-                  <div className="font-bold text-[20px] md:text-[30px] my-4">
-                    {item.title}
+          {blogList.map((item: blogListRes, index: number) => (
+            <button
+              key={index}
+              onClick={() => openblog(item.detail_link)}
+              className="w-full "
+            >
+              <div className={`border-b-2 p-4`}>
+                <div className="flex flex-col md:flex-row pb-4">
+                  <div className="mr-6 w-full md:w-3/12 h-full flex md:block">
+                    <Image
+                      src={
+                        item.img_src === "" || !item.img_src
+                          ? defaultImage
+                          : item.img_src
+                      }
+                      alt="썸네일 이미지"
+                      className={`w-4/12 xs:w-1/2 md:w-full h-[100px] xs:h-[150px] md:h-[200px]`}
+                      width={200}
+                      height={200}
+                    />
+                    <ul className={`w-8/12 xs:w-1/2 ml-1 block md:hidden`}>
+                      <li className="font-bold text-[20px] md:text-[30px] my-4">
+                        {item.title}
+                      </li>
+                      <li>
+                        <span className="text-[16px] md:text-[26px]">
+                          chanhong
+                        </span>
+                      </li>
+                      <li>
+                        <span className="text-[13px] md:text-[16px] text-[#828282]">
+                          {moment(item.created_at).format("YYYY-MM-DD")}
+                        </span>
+                      </li>
+                    </ul>
                   </div>
-                  <div className="flex flex-col md:flex-row pb-4">
-                    <div className="mr-6 w-full md:w-3/12 h-full flex md:block">
-                      <Image
-                        src={`https://strapi.chanhong.pro/uploads/${item.thumbnail_img_link}`}
-                        alt="썸네일 이미지"
-                        className={`w-4/12 xs:w-1/2 md:w-full h-[100px] xs:h-[150px] md:h-[200px]`}
-                        width={200}
-                        height={200}
-                      />
-                      <ul className={`w-8/12 xs:w-1/2 ml-1 block md:hidden`}>
-                        <li>
-                          <span className="text-[16px] md:text-[26px]">
-                            {item.creator}
-                          </span>
-                        </li>
-                        <li>
-                          <span className="text-[13px] md:text-[16px] text-[#828282]">
-                            {moment(item.createdAt).format("YYYY-MM-DD")}
-                          </span>
-                        </li>
-                        <li className="text-[#828282] flex space-x-1.5 text-[15px] md:text-[20px]">
-                          <span>{item?.intro}</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className={`w-9/12`}>
-                      <ul className="hidden md:flex flex-col space-y-1">
-                        <li>
-                          <span className="text-[26px]">{item.creator}</span>
-                          <span className="text-[16px] ml-2 text-[#828282]">
-                            {moment(item.createdAt).format("YYYY-MM-DD")}
-                          </span>
-                        </li>
-                        <li className="text-[#828282] flex space-x-1.5 text-[20px]">
-                          <span>{item.intro}</span>
-                          {item.tags.map((tag: string, index: number) => (
-                            <span key={index}>#{tag}</span>
-                          ))}
-                        </li>
-                        <li className="text-[20px]">
-                          {truncateText(htmlTagRemove(item.content), 200)}
-                        </li>
-                      </ul>
-                    </div>
+                  {/* 우측 */}
+                  <div className={`w-9/12`}>
+                    <ul className="hidden md:block flex-col space-y-1">
+                      <li className="font-bold text-[20px] md:text-[30px] my-4">
+                        {item.title}
+                      </li>
+                      <li className="text-left">
+                        <span className="text-[26px]">chahong</span>
+                        <span className="text-[16px] ml-2 text-[#828282]">
+                          {moment(item.created_at).format("YYYY-MM-DD")}
+                        </span>
+                      </li>
+                      <li className="text-[#828282] flex space-x-1.5 text-[20px]">
+                        <span>{item.intro}</span>
+                      </li>
+                    </ul>
                   </div>
                 </div>
-              </Link>
-            ))}
+              </div>
+            </button>
+          ))}
         </div>
       </div>
       <style jsx>

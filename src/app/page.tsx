@@ -5,41 +5,73 @@ import Section1 from "@/components/main/Section1";
 import Section2 from "@/components/main/Section2";
 import Section3 from "@/components/main/Section3";
 import Loader from "@/components/commons/Loader";
+import { MainChatBot } from "@/components/chatbot/MainChatBot";
 
-import axios from "axios";
-import { blogListDto } from "@/dataDto/blogDto";
+import { IConversation } from "@/app/state/chatbot/chatBoxState";
+
+import { useRecoilState } from "recoil";
 import { useQueries } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useState } from "react";
+import { velogApi } from "@/hooks/velog/velog";
+
+import {
+  chatIsChatBoxState,
+  chatListState,
+} from "@/app/state/chatbot/chatBoxState";
 
 export default function Home() {
-  const NEXT_PUBLIC_API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN ?? "";
-  const getBlogList = async () => {
-    const result = await axios.get(`${NEXT_PUBLIC_API_DOMAIN}/api/blog-posts`);
-    return result.data.data;
-  };
   const queryResult = useQueries({
-    queries: [{ queryKey: ["blog_list"], queryFn: getBlogList }],
+    queries: [
+      {
+        queryKey: [velogApi().velogKey().VELOG_LIST],
+        queryFn: () =>
+          velogApi()
+            .getVelogList()
+            .then((obj) => obj),
+      },
+    ],
   });
 
+  // 리코일 채팅 내역 저장
+  const [chatList, setChatList] =
+    useRecoilState<IConversation[]>(chatListState);
+  // 채팅 박스 열지 말지
+  const [ischatBoxState, setIsChatBoxState] =
+    useRecoilState(chatIsChatBoxState);
+
+  const [savedContent, setSavedContent] = useState<{
+    savedQuetions: string;
+    savedAnswer: string;
+  }>({ savedQuetions: "", savedAnswer: "" });
   const { data: blogList, status: BlogListStatus } = queryResult[0];
-  const test = async () => {
-    console.log("??/");
-    const result = await axios.post(`${NEXT_PUBLIC_API_DOMAIN}/api/velog/test`);
-    console.log(result.data);
-  };
+  const [question, setQuestion] = useState<string>("");
 
   return (
-    <Layout>
-      <Section1 />
-      <button onClick={test} className="text-3xl">
-        테스트 해보자
-      </button>
-      {/* <Section2 /> */}
-      {/* {BlogListStatus === "success" ? (
-        <Section3 blogList={blogList} />
-      ) : (
-        <Loader />
-      )} */}
-    </Layout>
+    <>
+      <MainChatBot
+        question={question}
+        savedQuetions={savedContent.savedQuetions}
+        savedAnswer={savedContent.savedAnswer}
+      />
+      <Layout>
+        <Section1 />
+        <Section2
+          question={question}
+          setQuestion={setQuestion}
+          setSavedContent={setSavedContent}
+        />
+        {BlogListStatus === "success" ? (
+          <Section3 blogList={blogList} />
+        ) : (
+          <Loader />
+        )}
+      </Layout>
+    </>
   );
 }
+
+// const test = async () => {
+//   const result = await axios.post(
+//     `${NEXT_PUBLIC_API_DOMAIN}/api/velog/blog/test`
+//   );
+// };

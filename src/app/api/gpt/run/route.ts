@@ -11,14 +11,12 @@ export async function POST(request: Request) {
   if (activeRun) {
     // 활성화된 실행이 있다면 해당 실행의 ID를 사용
     runId = activeRun.id;
-    console.log("Already active run:", runId);
   } else {
     // 활성화된 실행이 없다면 새로운 실행 생성
     const run = await openAi.beta.threads.runs.create(thread_id, {
       assistant_id: assistance_id,
     });
     runId = run.id;
-    console.log("New run created:", runId);
   }
   if (runId !== "") {
     return NextResponse.json({ data: runId }, { status: 200 });
@@ -34,14 +32,12 @@ export async function POST(request: Request) {
 //   if (activeRun) {
 //     // 활성화된 실행이 있다면 해당 실행의 ID를 사용
 //     runId = activeRun.id;
-//     console.log("Already active run:", runId);
 //   } else {
 //     // 활성화된 실행이 없다면 새로운 실행 생성
 //     const run = await openai.beta.threads.runs.create(thread_id, {
 //       assistant_id: assistance_id,
 //     });
 //     runId = run.id;
-//     console.log("New run created:", runId);
 //   }
 
 //   return runId;

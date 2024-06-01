@@ -1,11 +1,14 @@
 "use client";
-import React, { useState, useRef } from "react";
-import { FcCustomerSupport } from "react-icons/fc";
+import React, { useState, useRef, useEffect } from "react";
 import { IoIosClose } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
-import { threadState } from "@/app/state/threadState";
-import { assistantState } from "@/app/state/assistantState";
-
+import { threadState } from "@/app/state/chatbot/threadState";
+import { assistantState } from "@/app/state/chatbot/assistantState";
+import { IConversation } from "@/app/state/chatbot/chatBoxState";
+import {
+  chatIsChatBoxState,
+  chatListState,
+} from "@/app/state/chatbot/chatBoxState";
 import { useRecoilState } from "recoil";
 import {
   getAssistant,
@@ -14,33 +17,72 @@ import {
   createRun,
   retrieveRun,
   getListMessage,
-} from "@/hooks/gptAPI.ts/gpt";
+} from "@/hooks/gptAPI/gpt";
 
-interface chatDto {
-  is_answer: boolean;
-  message: string;
+interface props {
+  question?: string;
+  savedQuetions?: string;
+  savedAnswer?: string;
 }
 
-export const ChatBot = () => {
-  const [baollonState, setBallonState] = useState<boolean>(false);
-  const [chatState, setChatState] = useState<boolean>(false);
-
+export const MainChatBot = ({
+  question,
+  savedQuetions,
+  savedAnswer,
+}: props) => {
   const chatInputRef = useRef<HTMLInputElement | null>(null);
 
-  const [gptMessageList, setGptMessageList] = useState<chatDto[]>([
-    { is_answer: false, message: "ssssssssrrrrrrr" },
-    { is_answer: true, message: "ssssssssrrrrrrr" },
-  ]);
   const [apiLoading, setApiLoading] = useState<boolean>(false);
 
+  // 리코일 채팅 내역 저장
+  const [chatList, setChatList] =
+    useRecoilState<IConversation[]>(chatListState);
+  // 채팅 박스 열지 말지
+  const [ischatBoxState, setIsChatBoxState] =
+    useRecoilState(chatIsChatBoxState);
+  // 쓰레드 아이디 저장
   const [threadStateId, setThreadStateId] = useRecoilState(threadState);
+  // 어시스턴트 아이디 저장 (default값이고 바뀔일 없음)
   const [assistantStateId, setAssistantStateId] =
     useRecoilState(assistantState);
 
+  useEffect(() => {
+    // 이 경우 질문 시작
+    if (question && question !== "") {
+      startChat(question);
+    }
+  }, [question]);
+
+  useEffect(() => {
+    // 이 경우 질문 시작
+    if (
+      savedQuetions &&
+      savedAnswer &&
+      savedQuetions !== "" &&
+      savedAnswer !== ""
+    ) {
+      const newChatList = chatList.length > 0 ? [...chatList] : [];
+      setApiLoading(true);
+      setTimeout(() => {
+        newChatList.push({
+          is_answer: false,
+          message: savedQuetions,
+        });
+        newChatList.push({
+          is_answer: true,
+          message: savedAnswer,
+        });
+        setChatList(newChatList);
+        setApiLoading(false);
+      }, 3000);
+    }
+  }, [savedQuetions, savedAnswer]);
+
+  //채팅 시작
   const startChat = async (question: string) => {
     setApiLoading(true);
-    const newGptMessageList = [...gptMessageList];
-    newGptMessageList.push({
+    const newChatList = chatList.length > 0 ? [...chatList] : [];
+    newChatList.push({
       is_answer: false,
       message: question,
     });
@@ -76,7 +118,6 @@ export const ChatBot = () => {
     // 런 다돌아갔는지 확인
     while (!completeStatus) {
       const status = await retrieveRun(thread_id, runId);
-      console.log(status);
       if (status === "completed") {
         completeStatus = true;
       } else {
@@ -88,11 +129,11 @@ export const ChatBot = () => {
     if (completeStatus) {
       const result: any = await getListMessage(thread_id);
       const cleanedText = result.text.value.replace(/【\d+:\d+†source】/g, "");
-      newGptMessageList.push({
+      newChatList.push({
         is_answer: true,
         message: cleanedText,
       });
-      setGptMessageList(newGptMessageList);
+      setChatList(newChatList);
     }
     setApiLoading(false);
   };
@@ -116,32 +157,16 @@ export const ChatBot = () => {
 
   return (
     <>
-      <div className={`fixed z-50 right-[1%] bottom-[100px]`}>
-        <button
-          type={`button`}
-          onClick={() => setChatState(!chatState)}
-          className={`relative hover:scale-125 transition transition-all`}
-        >
-          <FcCustomerSupport
-            size={50}
-            onMouseOver={() => setBallonState(true)}
-            onMouseOut={() => setBallonState(false)}
-          />
-          {baollonState && (
-            <div className={`ballon`}>이력이 궁금하다면 클릭해보세요.</div>
-          )}
-        </button>
-      </div>
       <div
         className={`fixed w-screen z-40 h-screen bg-black bg-opacity-35 flex items-center justify-center
         ${
-          chatState
+          ischatBoxState
             ? "transition translate-y-0 duration-500"
             : "transition -translate-y-[120%] duration-0"
         }
         `}
         onClick={() => {
-          setChatState(!chatState);
+          setIsChatBoxState(!ischatBoxState);
         }}
       >
         <div
@@ -155,7 +180,7 @@ export const ChatBot = () => {
               궁금한점을 입력해주세요.
               <button
                 type="button"
-                onClick={() => setChatState(!chatState)}
+                onClick={() => setIsChatBoxState(!ischatBoxState)}
                 className={`absolute right-0 -bottom-[2.5px] rounded-full hover:bg-slate-200`}
               >
                 <IoIosClose size={50} />
@@ -164,24 +189,27 @@ export const ChatBot = () => {
           </div>
           <div className={`h-[80%] overflow-y-auto border-x-2 border-b-2 p-2`}>
             <ul className={`flex flex-col space-y-1`}>
-              {gptMessageList.map((item: chatDto, index) => (
-                <li
-                  key={index}
-                  className={`flex my-1 py-1 w-full ${
-                    item.is_answer ? "flex-row" : "flex-row-reverse text-right"
-                  }`}
-                >
-                  <span
-                    className={`px-3 py-1.5 rounded-xl w-[70%] break-all ${
+              {chatList.length > 0 &&
+                chatList.map((item: IConversation, index: number) => (
+                  <li
+                    key={index}
+                    className={`flex my-1 py-1 w-full ${
                       item.is_answer
-                        ? "bg-stone-200 dark:bg-[#2A2A2A] text-black dark:text-white "
-                        : "bg-purple-400 text-white"
+                        ? "flex-row"
+                        : "flex-row-reverse text-right"
                     }`}
                   >
-                    {item.message}
-                  </span>
-                </li>
-              ))}
+                    <span
+                      className={`px-3 py-1.5 rounded-xl w-[70%] break-all ${
+                        item.is_answer
+                          ? "bg-stone-200 dark:bg-[#2A2A2A] text-black dark:text-white "
+                          : "bg-purple-400 text-white"
+                      }`}
+                    >
+                      {item.message}
+                    </span>
+                  </li>
+                ))}
             </ul>
           </div>
           <div className={`flex mt-2`}>
@@ -192,7 +220,6 @@ export const ChatBot = () => {
               onKeyUp={enterButton}
               disabled={apiLoading}
             />
-
             {!apiLoading ? (
               <button
                 onClick={askQuestion}

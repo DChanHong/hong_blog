@@ -1,8 +1,9 @@
 import "@/public/styles/global.css";
 import DarkModeProvider from "@/components/dark/DarkModeProvider";
 import QueryClientProvider from "@/components/provide/ReactQueryClientProvider";
-import { ChatBot } from "@/components/ chatbot/ChatBot";
+import { ChatBot } from "@/components/chatbot/ChatBot";
 import { Metadata } from "next";
+
 import RecoilRootWrapper from "@/components/provide/RecoilRootWrapper";
 
 export function generateMetadata(): Metadata {

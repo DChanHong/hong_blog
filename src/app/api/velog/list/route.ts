@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "../../../../utils/client";
+import prisma from "@/utils/client";
 
 interface BlogEntity {
   idx: number;
@@ -11,8 +11,8 @@ interface BlogEntity {
   intro: string | null;
 }
 
-export async function POST(request: Request) {
-  console.log("test");
+export async function GET(request: Request) {
+  const blogEntity: BlogEntity[] | null = await prisma.velog.findMany({});
 
-  return NextResponse.json({ data: "" }, { status: 200 });
+  return NextResponse.json({ data: blogEntity }, { status: 200 });
 }

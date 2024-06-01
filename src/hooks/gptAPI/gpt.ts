@@ -77,6 +77,5 @@ async function fileRead() {
   const result = await axios
     .get("http://localhost:3000/api/gpt")
     .then((obj) => obj);
-  console.log(result);
   return result.data;
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "../../../../utils/client";
+import prisma from "@/utils/client";
 
 interface BlogEntity {
   idx: number;
