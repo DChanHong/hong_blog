@@ -198,12 +198,12 @@ export const ChatBot = () => {
               </div>
               <div className={`flex mt-2`}>
                 <input
-                  className={`w-full items-center p-2 border-2 rounded-xl`}
+                  className={`w-full relative items-center p-2 border-2 rounded-xl`}
                   placeholder="ex) 찬홍님의 이력은 어떻게 되나요?"
                   ref={chatInputRef}
                   onKeyUp={enterButton}
                   disabled={apiLoading}
-                />
+                ></input>
                 {!apiLoading ? (
                   <button
                     onClick={askQuestion}

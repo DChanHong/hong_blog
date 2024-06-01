@@ -1,12 +1,12 @@
 import React, { useRef, useState, Dispatch, SetStateAction } from "react";
 import { CiSearch } from "react-icons/ci";
 import { IConversation } from "@/app/state/chatbot/chatBoxState";
-import { assistantState } from "@/app/state/chatbot/assistantState";
 import { useRecoilState } from "recoil";
 import {
   chatIsChatBoxState,
   chatListState,
 } from "@/app/state/chatbot/chatBoxState";
+import axios from "axios";
 
 interface Iquestion {
   idx: number;
@@ -26,10 +26,6 @@ interface props {
 }
 
 const Section2 = ({ question, setQuestion, setSavedContent }: props) => {
-  // 리코일 채팅 내역 저장
-
-  const [chatList, setChatList] =
-    useRecoilState<IConversation[]>(chatListState);
   // 채팅 박스 열지 말지
   const [ischatBoxState, setIsChatBoxState] =
     useRecoilState(chatIsChatBoxState);
@@ -90,6 +86,13 @@ const Section2 = ({ question, setQuestion, setSavedContent }: props) => {
         <div className={"text-center text-[40px] font-bold"}>
           Ask a question about chanhong's information
         </div>
+        <button
+          onClick={async () => {
+            await axios.get("http://localhost:3000/api/gpt/ip");
+          }}
+        >
+          테스트
+        </button>
         <div className={"flex justify-center space-x-2 my-8"}>
           {questionList.map((item: Iquestion, index: number) => (
             <button

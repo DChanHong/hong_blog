@@ -16,3 +16,9 @@ model velog {
   detail_link String?   @db.VarChar(100)
   intro       String?   @db.VarChar(300)
 }
+
+model checkip {
+  idx        Int       @id @default(autoincrement())
+  ip         String?   @db.VarChar(200)
+  created_at DateTime? @db.DateTime(0)
+}

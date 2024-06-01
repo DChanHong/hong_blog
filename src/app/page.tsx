@@ -6,6 +6,7 @@ import Section2 from "@/components/main/Section2";
 import Section3 from "@/components/main/Section3";
 import Loader from "@/components/commons/Loader";
 import { MainChatBot } from "@/components/chatbot/MainChatBot";
+import { MainSideChatBot } from "@/components/chatbot/MainSideChatBot";
 
 import { IConversation } from "@/app/state/chatbot/chatBoxState";
 
@@ -53,6 +54,7 @@ export default function Home() {
         savedQuetions={savedContent.savedQuetions}
         savedAnswer={savedContent.savedAnswer}
       />
+      <MainSideChatBot />
       <Layout>
         <Section1 />
         <Section2
