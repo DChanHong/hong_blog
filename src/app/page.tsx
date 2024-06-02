@@ -14,6 +14,7 @@ import { useRecoilState } from "recoil";
 import { useQueries } from "@tanstack/react-query";
 import { useState } from "react";
 import { velogApi } from "@/hooks/velog/velog";
+import axios from "axios";
 
 import {
   chatIsChatBoxState,
@@ -47,6 +48,12 @@ export default function Home() {
   const { data: blogList, status: BlogListStatus } = queryResult[0];
   const [question, setQuestion] = useState<string>("");
 
+  const test = async () => {
+    const result = await axios.delete(
+      `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/cron/ip`
+    );
+  };
+
   return (
     <>
       <MainChatBot
@@ -54,9 +61,10 @@ export default function Home() {
         savedQuetions={savedContent.savedQuetions}
         savedAnswer={savedContent.savedAnswer}
       />
-      <MainSideChatBot />
+      {!ischatBoxState && <MainSideChatBot />}
       <Layout>
         <Section1 />
+        <button onClick={test}>asdasdasdasd</button>
         <Section2
           question={question}
           setQuestion={setQuestion}
@@ -71,9 +79,3 @@ export default function Home() {
     </>
   );
 }
-
-// const test = async () => {
-//   const result = await axios.post(
-//     `${NEXT_PUBLIC_API_DOMAIN}/api/velog/blog/test`
-//   );
-// };

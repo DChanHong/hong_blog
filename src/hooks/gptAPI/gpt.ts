@@ -68,9 +68,11 @@ export const getListMessage = async (thread_id: string) => {
   }
 };
 
-async function fileRead() {
-  const result = await axios
-    .get("http://localhost:3000/api/gpt")
-    .then((obj) => obj);
-  return result.data;
-}
+export const checkIp = async () => {
+  const result = await axios.get(`${NEXT_PUBLIC_API_DOMAIN}/api/gpt/ip`);
+  if (result.status === 200) {
+    return result.data.data;
+  } else {
+    return null;
+  }
+};
