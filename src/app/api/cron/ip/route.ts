@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/client";
 
-export async function DELETE(request: Request) {
+export async function GET(request: Request) {
   // console.log(request.headers.get("X-Forwarded-For"));
   const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
   const result = await prisma.checkip.deleteMany({
