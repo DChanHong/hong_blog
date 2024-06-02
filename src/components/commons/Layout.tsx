@@ -41,9 +41,9 @@ const Layout = ({ children }: Wrapper) => {
                 <span className="text-container">Hong Engineering</span>
               </Link>
             </h1>
-            <p className={`absolute top-8 right-14 sm:right-5 `}>
+            {/* <p className={`absolute top-8 right-14 sm:right-5 `}>
               <DarkModeButton />
-            </p>
+            </p> */}
 
             <ul className=" flex">
               <li className={`hidden sm:block font-semibold text-[25px] mx-4`}>
@@ -51,11 +51,11 @@ const Layout = ({ children }: Wrapper) => {
                   <span className="text-container"> Blog</span>
                 </Link>
               </li>
-              <li className={`hidden sm:block font-semibold text-[25px] mx-4`}>
+              {/* <li className={`hidden sm:block font-semibold text-[25px] mx-4`}>
                 <Link href={"/career"}>
                   <span className="text-container">Career</span>
                 </Link>
-              </li>
+              </li> */}
 
               <li className={`block sm:hidden font-semibold text-[1.4em] mx-4`}>
                 <button
@@ -106,7 +106,7 @@ const Layout = ({ children }: Wrapper) => {
                 <p className="text-[1rem] text-center">Home</p>
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 className="flex items-center px-6 py-2 mt-4  mx-1 hover:bg-[#EFEFEF] hover:rounded-xl"
                 href={"/career"}
@@ -116,7 +116,7 @@ const Layout = ({ children }: Wrapper) => {
                 </p>
                 <p className="text-[1rem] text-center">Career</p>
               </Link>
-            </li>
+            </li> */}
 
             <li>
               <Link

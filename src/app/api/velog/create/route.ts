@@ -14,16 +14,16 @@ interface BlogEntity {
 export async function POST(request: Request) {
   const blogEntity: BlogEntity | null = await prisma.velog.create({
     data: {
-      title:
-        "Error: Access denied for user 'root' @'localhost' EC2 ubuntu mysql 설치 후 접속시 에러",
+      title: "HTML 태그(Tag) Refactoring (feat: SEO)",
       img_src: "",
       created_at: new Date(),
-      tags: "ec2,mysql,ubuntu",
+      tags: "seo,React,next.js",
       detail_link:
-        "https://velog.io/@hongchee/Error-Access-denied-for-user-rootlocalhost-EC2-ubuntu-mysql-설치-후-접속시-에러",
-      intro: "",
+        "https://velog.io/@hongchee/HTML-태그Tag-Refactoring-feat-SEO",
+      intro: "Tag, SEO , Refactoring",
     },
   });
+  console.log(blogEntity);
 
   return NextResponse.json({ data: "" }, { status: 200 });
 }

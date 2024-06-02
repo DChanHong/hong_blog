@@ -12,7 +12,12 @@ interface BlogEntity {
 }
 
 export async function GET(request: Request) {
-  const blogEntity: BlogEntity[] | null = await prisma.velog.findMany({});
+  const blogEntity: BlogEntity[] | null = await prisma.velog.findMany({
+    orderBy: {
+      created_at: "desc",
+    },
+    take: 5,
+  });
 
   return NextResponse.json({ data: blogEntity }, { status: 200 });
 }
