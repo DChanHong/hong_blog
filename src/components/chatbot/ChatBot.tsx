@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { FcCustomerSupport } from "react-icons/fc";
 import { IoIosClose } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
@@ -21,11 +21,12 @@ import {
   createRun,
   retrieveRun,
   getListMessage,
+  checkIp,
 } from "@/hooks/gptAPI/gpt";
 
 export const ChatBot = () => {
-  const [baollonState, setBallonState] = useState<boolean>(false);
   const chatInputRef = useRef<HTMLInputElement | null>(null);
+  const [isChatPossible, setIsChatPossible] = useState<boolean>(true);
   const pathName = usePathname();
 
   const [apiLoading, setApiLoading] = useState<boolean>(false);
@@ -42,8 +43,21 @@ export const ChatBot = () => {
   const [assistantStateId, setAssistantStateId] =
     useRecoilState(assistantState);
 
+  useEffect(() => {
+    chatPossible();
+  }, [ischatBoxState]);
+
+  // IP 체크
+  const chatPossible = async () => {
+    const result = await checkIp();
+    setIsChatPossible(result);
+  };
+
   //채팅 시작
   const startChat = async (question: string) => {
+    if (!isChatPossible) {
+      return;
+    }
     setApiLoading(true);
     const newChatList = [...chatList];
     newChatList.push({
@@ -99,6 +113,7 @@ export const ChatBot = () => {
       });
       setChatList(newChatList);
     }
+    await chatPossible();
     setApiLoading(false);
   };
 
@@ -124,22 +139,24 @@ export const ChatBot = () => {
       {pathName === "/" ? null : (
         <>
           <div className={`fixed z-50 right-[1%] bottom-[100px]`}>
-            <button
-              onClick={() => setIsChatBoxState(!ischatBoxState)}
-              type={`button`}
-              className={`relative hover:scale-125 transition transition-all`}
-            >
-              <Image
-                src={botIcon}
-                alt="챗봇 이미지"
-                className={`w-[100px] h-[100px]`}
-                width={100}
-                height={100}
-              />
-              <div className={`ballon`}>
-                챗봇에게 찬홍님에 대해 질문해보세요.
-              </div>
-            </button>
+            {!ischatBoxState && (
+              <button
+                onClick={() => setIsChatBoxState(!ischatBoxState)}
+                type={`button`}
+                className={`relative hover:scale-125 transition transition-all`}
+              >
+                <Image
+                  src={botIcon}
+                  alt="챗봇 이미지"
+                  className={`w-[100px] h-[100px]`}
+                  width={100}
+                  height={100}
+                />
+                <div className={`ballon`}>
+                  챗봇에게 찬홍님에 대해 질문해보세요.
+                </div>
+              </button>
+            )}
           </div>
           <div
             className={`fixed w-screen z-40 h-screen bg-black bg-opacity-35 flex items-center justify-center
@@ -200,34 +217,40 @@ export const ChatBot = () => {
                     ))}
                 </ul>
               </div>
-              <div className={`flex mt-2`}>
-                {!apiLoading ? (
-                  <input
-                    className={`w-full relative items-center p-2 border-2 rounded-xl`}
-                    placeholder="ex) 찬홍님의 이력은 어떻게 되나요?"
-                    ref={chatInputRef}
-                    onKeyUp={enterButton}
-                    disabled={apiLoading}
-                  />
-                ) : (
-                  <div
-                    className={`w-full flex justify-center relative p-2 border-2 rounded-xl`}
-                  >
-                    <span className="loader"></span>
-                  </div>
-                )}
-                {!apiLoading ? (
-                  <button
-                    onClick={askQuestion}
-                    type={`button`}
-                    className={`w-[40px] rounded-xl`}
-                  >
-                    <CiSearch size={40} />
-                  </button>
-                ) : (
-                  <div className="ml-2 border-t-[4px] border-blue-500 border-solid rounded-full h-10 w-10 animate-spin" />
-                )}
-              </div>
+              {isChatPossible ? (
+                <div className={`flex mt-2`}>
+                  {!apiLoading ? (
+                    <input
+                      className={`w-full items-center p-2 border-2 rounded-xl`}
+                      placeholder="ex) 찬홍님의 이력은 어떻게 되나요?"
+                      ref={chatInputRef}
+                      onKeyUp={enterButton}
+                      disabled={apiLoading}
+                    />
+                  ) : (
+                    <div
+                      className={`w-full flex justify-center relative p-2 border-2 rounded-xl`}
+                    >
+                      <span className="loader"></span>
+                    </div>
+                  )}
+                  {!apiLoading ? (
+                    <button
+                      onClick={askQuestion}
+                      type={`button`}
+                      className={`w-[40px] rounded-xl`}
+                    >
+                      <CiSearch size={40} />
+                    </button>
+                  ) : (
+                    <div className="ml-2 border-t-[4px] border-blue-500 border-solid rounded-full h-10 w-10 animate-spin" />
+                  )}
+                </div>
+              ) : (
+                <div className="font-bold text-red-500 text-center mt-4">
+                  5번 이상 질문하셨습니다. 10분 후에 다시 시도해주세요.
+                </div>
+              )}
             </div>
           </div>
           <style jsx>{`

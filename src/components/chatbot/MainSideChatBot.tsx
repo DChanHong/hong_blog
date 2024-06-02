@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import botIcon from "../../public/image/botIcon.webp";
+import { chatIsChatBoxState } from "@/app/state/chatbot/chatBoxState";
+import { useRecoilState } from "recoil";
 
 export const MainSideChatBot = () => {
+  const [ischatBoxState, setIsChatBoxState] =
+    useRecoilState(chatIsChatBoxState);
   return (
     <div className={`fixed z-50 right-[3%] bottom-[100px]`}>
       <button
         type={`button`}
+        onClick={() => setIsChatBoxState((prev) => !prev)}
         className={`relative hover:scale-125 transition transition-all`}
       >
         <Image

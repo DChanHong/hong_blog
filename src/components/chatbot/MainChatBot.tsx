@@ -17,6 +17,7 @@ import {
   createRun,
   retrieveRun,
   getListMessage,
+  checkIp,
 } from "@/hooks/gptAPI/gpt";
 
 interface props {
@@ -31,6 +32,7 @@ export const MainChatBot = ({
   savedAnswer,
 }: props) => {
   const chatInputRef = useRef<HTMLInputElement | null>(null);
+  const [isChatPossible, setIsChatPossible] = useState<boolean>(true);
 
   const [apiLoading, setApiLoading] = useState<boolean>(false);
 
@@ -78,8 +80,21 @@ export const MainChatBot = ({
     }
   }, [savedQuetions, savedAnswer]);
 
+  useEffect(() => {
+    chatPossible();
+  }, [ischatBoxState]);
+
+  // IP 체크
+  const chatPossible = async () => {
+    const result = await checkIp();
+    setIsChatPossible(result);
+  };
+
   //채팅 시작
   const startChat = async (question: string) => {
+    if (!isChatPossible) {
+      return;
+    }
     setApiLoading(true);
     const newChatList = chatList.length > 0 ? [...chatList] : [];
     newChatList.push({
@@ -135,6 +150,7 @@ export const MainChatBot = ({
       });
       setChatList(newChatList);
     }
+    await chatPossible();
     setApiLoading(false);
   };
 
@@ -214,34 +230,40 @@ export const MainChatBot = ({
                 ))}
             </ul>
           </div>
-          <div className={`flex mt-2`}>
-            {!apiLoading ? (
-              <input
-                className={`w-full items-center p-2 border-2 rounded-xl`}
-                placeholder="ex) 찬홍님의 이력은 어떻게 되나요?"
-                ref={chatInputRef}
-                onKeyUp={enterButton}
-                disabled={apiLoading}
-              />
-            ) : (
-              <div
-                className={`w-full flex justify-center relative p-2 border-2 rounded-xl`}
-              >
-                <span className="loader"></span>
-              </div>
-            )}
-            {!apiLoading ? (
-              <button
-                onClick={askQuestion}
-                type={`button`}
-                className={`w-[40px] rounded-xl`}
-              >
-                <CiSearch size={40} />
-              </button>
-            ) : (
-              <div className="ml-2 border-t-[4px] border-blue-500 border-solid rounded-full h-10 w-10 animate-spin" />
-            )}
-          </div>
+          {isChatPossible ? (
+            <div className={`flex mt-2`}>
+              {!apiLoading ? (
+                <input
+                  className={`w-full items-center p-2 border-2 rounded-xl`}
+                  placeholder="ex) 찬홍님의 이력은 어떻게 되나요?"
+                  ref={chatInputRef}
+                  onKeyUp={enterButton}
+                  disabled={apiLoading}
+                />
+              ) : (
+                <div
+                  className={`w-full flex justify-center relative p-2 border-2 rounded-xl`}
+                >
+                  <span className="loader"></span>
+                </div>
+              )}
+              {!apiLoading ? (
+                <button
+                  onClick={askQuestion}
+                  type={`button`}
+                  className={`w-[40px] rounded-xl`}
+                >
+                  <CiSearch size={40} />
+                </button>
+              ) : (
+                <div className="ml-2 border-t-[4px] border-blue-500 border-solid rounded-full h-10 w-10 animate-spin" />
+              )}
+            </div>
+          ) : (
+            <div className="font-bold text-red-500 text-center mt-4">
+              5번 이상 질문하셨습니다. 10분 후에 다시 시도해주세요.
+            </div>
+          )}
         </div>
       </div>
       <style jsx>{`
