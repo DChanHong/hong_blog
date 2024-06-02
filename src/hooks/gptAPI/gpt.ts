@@ -1,12 +1,9 @@
 import axios from "axios";
 
-const NEXT_PUBLIC_API_INNER_DOMAIN =
-  process.env.NEXT_PUBLIC_API_INNER_DOMAIN ?? "";
+const NEXT_PUBLIC_API_DOMAIN = process.env.NEXT_PUBLIC_API_DOMAIN ?? "";
 
 export const getAssistant = async () => {
-  const result = await axios.get(
-    `${NEXT_PUBLIC_API_INNER_DOMAIN}/api/gpt/assistant`
-  );
+  const result = await axios.get(`${NEXT_PUBLIC_API_DOMAIN}/api/gpt/assistant`);
   if (result.status === 200) {
     return result.data.data;
   } else {
@@ -15,9 +12,7 @@ export const getAssistant = async () => {
 };
 
 export const getThreadId = async () => {
-  const result = await axios.get(
-    `${NEXT_PUBLIC_API_INNER_DOMAIN}/api/gpt/thread`
-  );
+  const result = await axios.get(`${NEXT_PUBLIC_API_DOMAIN}/api/gpt/thread`);
   if (result.status === 200) {
     return result.data.data;
   } else {
@@ -26,10 +21,10 @@ export const getThreadId = async () => {
 };
 
 export const postMessage = async (question: string, thread_id: string) => {
-  const result = await axios.post(
-    `${NEXT_PUBLIC_API_INNER_DOMAIN}/api/gpt/message`,
-    { question, thread_id }
-  );
+  const result = await axios.post(`${NEXT_PUBLIC_API_DOMAIN}/api/gpt/message`, {
+    question,
+    thread_id,
+  });
   if (result.status === 200) {
     return result.data.data;
   } else {
@@ -38,10 +33,10 @@ export const postMessage = async (question: string, thread_id: string) => {
 };
 
 export const createRun = async (thread_id: string, assistance_id: string) => {
-  const result = await axios.post(
-    `${NEXT_PUBLIC_API_INNER_DOMAIN}/api/gpt/run`,
-    { thread_id, assistance_id }
-  );
+  const result = await axios.post(`${NEXT_PUBLIC_API_DOMAIN}/api/gpt/run`, {
+    thread_id,
+    assistance_id,
+  });
   if (result.status === 200) {
     return result.data.data;
   } else {
@@ -51,7 +46,7 @@ export const createRun = async (thread_id: string, assistance_id: string) => {
 
 export const retrieveRun = async (thread_id: string, run_id: string) => {
   const result = await axios.post(
-    `${NEXT_PUBLIC_API_INNER_DOMAIN}/api/gpt/retrieve`,
+    `${NEXT_PUBLIC_API_DOMAIN}/api/gpt/retrieve`,
     { thread_id, run_id }
   );
   if (result.status === 200) {
@@ -63,7 +58,7 @@ export const retrieveRun = async (thread_id: string, run_id: string) => {
 
 export const getListMessage = async (thread_id: string) => {
   const result = await axios.post(
-    `${NEXT_PUBLIC_API_INNER_DOMAIN}/api/gpt/message-list`,
+    `${NEXT_PUBLIC_API_DOMAIN}/api/gpt/message-list`,
     { thread_id }
   );
   if (result.status === 200) {
