@@ -64,7 +64,7 @@ export default function Home() {
       {!ischatBoxState && <MainSideChatBot />}
       <Layout>
         <Section1 />
-        <button onClick={test}>asdasdasdasd</button>
+        {/* <button onClick={test}>asdasdasdasd</button> */}
         <Section2
           question={question}
           setQuestion={setQuestion}
