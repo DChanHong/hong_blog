@@ -13,6 +13,11 @@ module.exports = {
         hostname: "xxx.xxx.com",
       },
     ],
-    domains: ["localhost", "strapi.chanhong.pro", "chanhong.pro"], // 허용할 호스트네임을 추가
+    domains: [
+      "localhost",
+      "strapi.chanhong.pro",
+      "chanhong.pro",
+      "velog.velcdn.com",
+    ], // 허용할 호스트네임을 추가
   },
 };

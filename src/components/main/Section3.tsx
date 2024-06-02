@@ -91,7 +91,7 @@ const Section3 = ({ blogList }: props) => {
                           {moment(item.created_at).format("YYYY-MM-DD")}
                         </span>
                       </li>
-                      <li className="text-[#828282] flex space-x-1.5 text-[20px]">
+                      <li className="text-[#828282] md:flex space-x-1.5 text-[20px]">
                         <span>{item.intro}</span>
                       </li>
                     </ul>
@@ -101,6 +101,12 @@ const Section3 = ({ blogList }: props) => {
             </button>
           ))}
         </div>
+        <Link
+          href={"/blog"}
+          className={`flex flex-col justify-center my-4 text-center text-[24px] font-bold py-4 bg-gray-100 hover:opacity-65`}
+        >
+          더보기 +
+        </Link>
       </div>
       <style jsx>
         {`

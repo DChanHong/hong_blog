@@ -86,14 +86,16 @@ const Section2 = ({ question, setQuestion, setSavedContent }: props) => {
         <div className={"text-center text-[40px] font-bold"}>
           Ask a question about chanhong's information
         </div>
-        <button
+        {/* <button
           onClick={async () => {
-            await axios.get("http://localhost:3000/api/gpt/ip");
+            await axios.post("http://localhost:3000/api/velog/create");
           }}
         >
           테스트
-        </button>
-        <div className={"flex justify-center space-x-2 my-8"}>
+        </button> */}
+        <div
+          className={"flex flex-wrap space-y-2 justify-center space-x-2 my-8"}
+        >
           {questionList.map((item: Iquestion, index: number) => (
             <button
               key={index}

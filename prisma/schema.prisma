@@ -10,7 +10,7 @@ datasource db {
 model velog {
   idx         Int       @id @default(autoincrement())
   title       String?   @db.VarChar(300)
-  img_src     String?   @db.VarChar(45)
+  img_src     String?   @db.VarChar(300)
   created_at  DateTime? @db.DateTime(0)
   tags        String?   @db.VarChar(45)
   detail_link String?   @db.VarChar(100)

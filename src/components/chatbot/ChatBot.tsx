@@ -7,6 +7,8 @@ import { threadState } from "@/app/state/chatbot/threadState";
 import { assistantState } from "@/app/state/chatbot/assistantState";
 import { IConversation } from "@/app/state/chatbot/chatBoxState";
 import { usePathname } from "next/navigation";
+import botIcon from "../../public/image/botIcon.webp";
+import Image from "next/image";
 import {
   chatIsChatBoxState,
   chatListState,
@@ -123,18 +125,20 @@ export const ChatBot = () => {
         <>
           <div className={`fixed z-50 right-[1%] bottom-[100px]`}>
             <button
-              type={`button`}
               onClick={() => setIsChatBoxState(!ischatBoxState)}
+              type={`button`}
               className={`relative hover:scale-125 transition transition-all`}
             >
-              <FcCustomerSupport
-                size={50}
-                onMouseOver={() => setBallonState(true)}
-                onMouseOut={() => setBallonState(false)}
+              <Image
+                src={botIcon}
+                alt="챗봇 이미지"
+                className={`w-[100px] h-[100px]`}
+                width={100}
+                height={100}
               />
-              {baollonState && (
-                <div className={`ballon`}>이력이 궁금하다면 클릭해보세요.</div>
-              )}
+              <div className={`ballon`}>
+                챗봇에게 찬홍님에 대해 질문해보세요.
+              </div>
             </button>
           </div>
           <div
@@ -184,10 +188,10 @@ export const ChatBot = () => {
                         }`}
                       >
                         <span
-                          className={`px-3 py-1.5 rounded-xl w-[70%] break-all ${
+                          className={`px-3 py-1.5 rounded-xl max-w-[70%] break-all ${
                             item.is_answer
-                              ? "bg-stone-200 dark:bg-[#2A2A2A] text-black dark:text-white "
-                              : "bg-purple-400 text-white"
+                              ? "bg-[#EFF4FB] dark:bg-[#1A222C] text-black dark:text-[#818A94] "
+                              : "bg-[#3C50E0] text-white"
                           }`}
                         >
                           {item.message}
@@ -197,13 +201,21 @@ export const ChatBot = () => {
                 </ul>
               </div>
               <div className={`flex mt-2`}>
-                <input
-                  className={`w-full relative items-center p-2 border-2 rounded-xl`}
-                  placeholder="ex) 찬홍님의 이력은 어떻게 되나요?"
-                  ref={chatInputRef}
-                  onKeyUp={enterButton}
-                  disabled={apiLoading}
-                ></input>
+                {!apiLoading ? (
+                  <input
+                    className={`w-full relative items-center p-2 border-2 rounded-xl`}
+                    placeholder="ex) 찬홍님의 이력은 어떻게 되나요?"
+                    ref={chatInputRef}
+                    onKeyUp={enterButton}
+                    disabled={apiLoading}
+                  />
+                ) : (
+                  <div
+                    className={`w-full flex justify-center relative p-2 border-2 rounded-xl`}
+                  >
+                    <span className="loader"></span>
+                  </div>
+                )}
                 {!apiLoading ? (
                   <button
                     onClick={askQuestion}
@@ -222,9 +234,9 @@ export const ChatBot = () => {
         .ballon {
           position: absolute;
           width: 200px;
-          height: 100px;
+          height: 80px;
           right: 20px;
-          top: -110px;
+          top: -85px;
           background: #484848;
           color: white;
           border-radius: 5px;
@@ -242,6 +254,41 @@ export const ChatBot = () => {
           border-style: solid;
           border-color: #484848 transparent transparent transparent;
         }
+
+        .loader {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          display: block;
+          margin: auto;
+          position: absolute;
+          top: 30%;
+          color: #3c50e0;
+          box-sizing: border-box;
+          animation: animloader 2s linear infinite;
+        }
+
+        @keyframes animloader {
+          0% {
+            box-shadow: 14px 0 0 -2px, 38px 0 0 -2px, -14px 0 0 -2px,
+              -38px 0 0 -2px;
+          }
+          25% {
+            box-shadow: 14px 0 0 -2px, 38px 0 0 -2px, -14px 0 0 -2px,
+              -38px 0 0 2px;
+          }
+          50% {
+            box-shadow: 14px 0 0 -2px, 38px 0 0 -2px, -14px 0 0 2px,
+              -38px 0 0 -2px;
+          }
+          75% {
+            box-shadow: 14px 0 0 2px, 38px 0 0 -2px, -14px 0 0 -2px,
+              -38px 0 0 -2px;
+          }
+          100% {
+            box-shadow: 14px 0 0 -2px, 38px 0 0 2px, -14px 0 0 -2px,
+              -38px 0 0 -2px;
+          }
       `}</style>
         </>
       )}
