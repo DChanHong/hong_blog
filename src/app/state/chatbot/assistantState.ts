@@ -2,5 +2,5 @@ import { atom } from "recoil";
 
 export const assistantState = atom({
   key: "hong_assistantState",
-  default: "asst_iJTKfNg3Of0qUfyCW4SVFglS",
+  default: "asst_KuEgTUCMtLLmVkN2LCX7M0DV",
 });
