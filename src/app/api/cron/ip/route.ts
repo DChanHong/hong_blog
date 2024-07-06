@@ -1,16 +1,27 @@
-import { NextResponse } from "next/server";
+import {NextResponse} from "next/server";
 import prisma from "@/utils/client";
 
 export async function GET(request: Request) {
-  // console.log(request.headers.get("X-Forwarded-For"));
-  const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-  const result = await prisma.checkip.deleteMany({
-    where: {
-      created_at: {
-        lt: tenMinutesAgo, // less than 10 minutes ago
-      },
-    },
-  });
+	// console.log(request.headers.get("X-Forwarded-For"));
 
-  return NextResponse.json({ data: false }, { status: 200 });
+	try{
+		await prisma.checkip.updateMany({
+			data: {
+				hit:0
+			},
+			where: {
+				hit: {
+					gt: 5
+				},
+			},
+		});
+		return NextResponse.json({ ok: true });
+	}
+	catch{
+		return NextResponse.json({ ok: false });
+
+	}finally {
+		prisma.$disconnect()
+	}
+
 }

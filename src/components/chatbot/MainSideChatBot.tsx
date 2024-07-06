@@ -12,7 +12,7 @@ export const MainSideChatBot = () => {
       <button
         type={`button`}
         onClick={() => setIsChatBoxState((prev) => !prev)}
-        className={`relative hover:scale-125 transition transition-all`}
+        className={`relative hover:scale-125 transition-all`}
       >
         <Image
           src={botIcon}
