@@ -34,7 +34,6 @@ export const MainSideChatBot = () => {
           color: white;
           border-radius: 5px;
           padding: 12px 12.8px;
-          border:1px solid 
           z-index: 1;
         }
 

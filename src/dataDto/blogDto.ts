@@ -1,9 +1,9 @@
 export interface blogListRes {
-  idx: number;
-  title: string;
-  img_src: string;
-  created_at: Date;
-  tags: string;
-  detail_link: string;
-  intro: string;
+	idx: number;
+	title: string | null;
+	img_src: string | null;
+	created_at: Date | null;
+	tags: string | null;
+	detail_link: string | null;
+	intro: string | null;
 }

@@ -12,13 +12,14 @@ model velog {
   title       String?   @db.VarChar(300)
   img_src     String?   @db.VarChar(300)
   created_at  DateTime? @db.DateTime(0)
-  tags        String?   @db.VarChar(45)
+  tags        String?   @db.VarChar(100)
   detail_link String?   @db.VarChar(100)
   intro       String?   @db.VarChar(300)
 }
 
 model checkip {
-  idx Int     @id @default(autoincrement())
-  ip  String? @db.VarChar(200)
-  hit Int?
+  idx        Int       @id @default(autoincrement())
+  ip         String    @db.VarChar(200)
+  hit        Int       @default(1)
+  updated_at DateTime? @db.DateTime(0)
 }

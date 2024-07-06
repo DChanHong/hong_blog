@@ -151,7 +151,7 @@ const page = () => {
                   {blogList.map((item: blogListRes, index: number) => (
                     <button
                       key={index}
-                      onClick={() => openblog(item.detail_link)}
+                      onClick={() => openblog(item.detail_link ?? '')}
                       className="w-full "
                     >
                       <div className={`border-b-2 p-4`}>

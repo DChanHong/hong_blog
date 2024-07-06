@@ -5,7 +5,7 @@ export async function GET(request: Request) {
   // console.log(request.headers.get("X-Forwarded-For"));
   const result = await prisma.checkip.findMany({
     where: {
-      ip: request.headers.get("X-Forwarded-For"),
+      ip: request.headers.get("X-Forwarded-For") ?? '',
     },
   });
 
