@@ -19,6 +19,7 @@ import {
   getListMessage,
   checkIp,
 } from "@/hooks/gptAPI/gpt";
+import {questionListState} from "@/app/state/chatbot/chatContentState";
 
 interface props {
   question?: string;
@@ -38,7 +39,7 @@ export const MainChatBot = ({
 
   // 리코일 채팅 내역 저장
   const [chatList, setChatList] =
-    useRecoilState<IConversation[]>(chatListState);
+    useRecoilState<IConversation[]>(questionListState);
   // 채팅 박스 열지 말지
   const [ischatBoxState, setIsChatBoxState] =
     useRecoilState(chatIsChatBoxState);

@@ -23,6 +23,7 @@ import {
   getListMessage,
   checkIp,
 } from "@/hooks/gptAPI/gpt";
+import {questionListState} from "@/app/state/chatbot/chatContentState";
 
 export const ChatBot = () => {
   const chatInputRef = useRef<HTMLInputElement | null>(null);
@@ -33,7 +34,7 @@ export const ChatBot = () => {
 
   // 리코일 채팅 내역 저장
   const [chatList, setChatList] =
-    useRecoilState<IConversation[]>(chatListState);
+    useRecoilState<IConversation[]>(questionListState);
   // 채팅 박스 열지 말지
   const [ischatBoxState, setIsChatBoxState] =
     useRecoilState(chatIsChatBoxState);
@@ -143,7 +144,7 @@ export const ChatBot = () => {
               <button
                 onClick={() => setIsChatBoxState(!ischatBoxState)}
                 type={`button`}
-                className={`relative hover:scale-125 transition transition-all`}
+                className={`relative hover:scale-125 transition-all`}
               >
                 <Image
                   src={botIcon}
@@ -264,7 +265,7 @@ export const ChatBot = () => {
           color: white;
           border-radius: 5px;
           padding: 12px 12.8px;
-          border:1px solid 
+          border:1px solid; 
           z-index: 1;
         }
 
