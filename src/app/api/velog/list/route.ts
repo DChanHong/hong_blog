@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     orderBy: {
       created_at: "desc",
     },
-    take: 6,
+    take: 9,
   });
 
   return NextResponse.json({ data: blogEntity }, { status: 200 });

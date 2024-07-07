@@ -52,7 +52,7 @@ export default function Home() {
     const result = await axios.get(
       `${process.env.NEXT_PUBLIC_API_DOMAIN}/api/velog/crawling`
     );
-	console.log('result',result)
+    console.log("result", result);
   };
 
   return (
@@ -65,7 +65,7 @@ export default function Home() {
       {!ischatBoxState && <MainSideChatBot />}
       <Layout>
         <Section1 />
-	      {/*<button onClick={test}>dasdasdsadas</button>*/}
+        {/*<button onClick={test}>dasdasdsadas</button>*/}
         <Section2
           question={question}
           setQuestion={setQuestion}

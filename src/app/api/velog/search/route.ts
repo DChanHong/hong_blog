@@ -16,7 +16,7 @@ export async function GET(request: Request) {
   const query = url.searchParams;
   const page = query.get("page") ? parseInt(query.get("page")!) : 1;
   const search = query.get("search") || "";
-  const pageSize = 5;
+  const pageSize = 6;
 
   const offset = (Number(page) - 1) * pageSize;
 
