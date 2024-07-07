@@ -23,10 +23,9 @@ const Section3 = ({ blogList }: props) => {
   const targetRef = useRef<HTMLDivElement>(null);
   const { flag, flagClass } = useElementObserve(targetRef);
 
-  const openblog = (link: string) => {
+  const openBlog = (link: string) => {
     window.open(`${link}`, "_blank", "noreferrer");
   };
-
   return (
     <div
       className={`w-full m-auto max-w-[1800px] flex justify-center mt-[150px] mb-20 ${flagClass}`}
@@ -42,60 +41,57 @@ const Section3 = ({ blogList }: props) => {
             <span className="text-container">Recent Blog Posts</span>
           </h2>
         </Link>
-        <div className={`flex flex-col justify-center`}>
+        <div
+          className={`grid gap-6 
+            grid-cols-1
+            sm:grid-cols-2
+            lg:grid-cols-3
+            
+          `}
+        >
           {blogList.map((item: blogListRes, index: number) => (
             <button
               key={index}
-              onClick={() => openblog(item.detail_link ?? '')}
-              className="w-full "
+              onClick={() => openBlog(item.detail_link ?? "")}
+              className={"w-full border-2 border-solid"}
             >
-              <div className={`border-b-2 p-4`}>
-                <div className="flex flex-col md:flex-row pb-4">
-                  <div className="mr-6 w-full md:w-3/12 h-full flex md:block">
-                    <Image
-                      src={
-                        item.img_src === "" || !item.img_src
-                          ? defaultImage
-                          : item.img_src
-                      }
-                      alt="썸네일 이미지"
-                      className={`w-4/12 xs:w-1/2 md:w-full h-[100px] xs:h-[150px] md:h-[200px]`}
-                      width={200}
-                      height={200}
-                    />
-                    <ul className={`w-8/12 xs:w-1/2 ml-1 block md:hidden`}>
-                      <li className="font-bold text-[20px] md:text-[30px] my-4">
-                        {item.title}
-                      </li>
-                      <li>
-                        <span className="text-[16px] md:text-[26px]">
-                          chanhong
-                        </span>
-                      </li>
-                      <li>
-                        <span className="text-[13px] md:text-[16px] text-[#828282]">
-                          {moment(item.created_at).format("YYYY-MM-DD")}
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                  {/* 우측 */}
-                  <div className={`w-9/12`}>
-                    <ul className="hidden md:block flex-col space-y-1">
-                      <li className="font-bold text-[20px] md:text-[30px] my-4">
-                        {item.title}
-                      </li>
-                      <li className="text-left">
-                        <span className="text-[26px]">chahong</span>
-                        <span className="text-[16px] ml-2 text-[#828282]">
-                          {moment(item.created_at).format("YYYY-MM-DD")}
-                        </span>
-                      </li>
-                      <li className="text-[#828282] md:flex space-x-1.5 text-[20px]">
-                        <span>{item.intro}</span>
-                      </li>
-                    </ul>
-                  </div>
+              <div className={"flex flex-col justify-between h-full"}>
+                <div>
+                  <Image
+                    src={
+                      item.img_src === "" || !item.img_src
+                        ? defaultImage
+                        : item.img_src
+                    }
+                    alt="썸네일 이미지"
+                    className={`w-full h-[300px]`}
+                    width={1000}
+                    height={500}
+                  />
+                </div>
+                <div className={"flex flex-col space-y-2 my-4 mx-4"}>
+                  <h3 className={`text-xl font-semibold line-clamp-1`}>
+                    {item.title ?? ""}
+                  </h3>
+                  <p className={`flex space-x-2 justify-center`}>
+                    <span className={`font-medium`}>chanhong</span>
+                    <span>{moment(item.created_at).format("YYYY-MM-DD")}</span>
+                  </p>
+                  <p className={`flex justify-center space-x-2`}>
+                    {item.tags &&
+                      item.tags.length > 0 &&
+                      item.tags
+                        .split(",")
+                        .slice(0, 3)
+                        .map((item) => (
+                          <span
+                            key={`${item}-${index}`}
+                            className="px-4 py-2 rounded-[20px] font-semibold bg-gray-100"
+                          >
+                            {item}
+                          </span>
+                        ))}
+                  </p>
                 </div>
               </div>
             </button>

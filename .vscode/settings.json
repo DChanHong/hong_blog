@@ -1,5 +1,7 @@
 {
-  "accessibility.signals.sounds.volume": 0,
   "editor.accessibilitySupport": "off",
-  "terminal.integrated.shellIntegration.enabled": true
+  "terminal.integrated.shellIntegration.enabled": true,
+  "accessibility.signalOptions": {
+    "volume": 0
+  }
 }

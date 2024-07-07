@@ -23,7 +23,7 @@ import {
   getListMessage,
   checkIp,
 } from "@/hooks/gptAPI/gpt";
-import {questionListState} from "@/app/state/chatbot/chatContentState";
+import { questionListState } from "@/app/state/chatbot/chatContentState";
 
 export const ChatBot = () => {
   const chatInputRef = useRef<HTMLInputElement | null>(null);
@@ -265,7 +265,6 @@ export const ChatBot = () => {
           color: white;
           border-radius: 5px;
           padding: 12px 12.8px;
-          border:1px solid; 
           z-index: 1;
         }
 

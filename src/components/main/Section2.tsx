@@ -27,7 +27,7 @@ interface props {
 
 const Section2 = ({ question, setQuestion, setSavedContent }: props) => {
   // 채팅 박스 열지 말지
-  const [ischatBoxState, setIsChatBoxState] =
+  const [, setIsChatBoxState] =
     useRecoilState(chatIsChatBoxState);
   const chatInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -86,13 +86,6 @@ const Section2 = ({ question, setQuestion, setSavedContent }: props) => {
         <div className={"text-center text-[40px] font-bold"}>
           Ask a question about chanhong's information
         </div>
-        {/* <button
-          onClick={async () => {
-            await axios.post("http://localhost:3000/api/velog/create");
-          }}
-        >
-          테스트
-        </button> */}
         <div
           className={"flex flex-wrap space-y-2 justify-center space-x-2 my-8"}
         >

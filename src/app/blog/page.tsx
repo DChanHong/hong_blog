@@ -135,6 +135,10 @@ const page = () => {
     setPageNumbers(pageNumberArr);
   };
 
+  const openBlog = (link: string) => {
+    window.open(`${link}`, "_blank", "noreferrer");
+  };
+
   return (
     <Layout>
       <section className="w-full m-auto">
@@ -144,76 +148,68 @@ const page = () => {
         {searchStatus !== "success" ? (
           <Loader />
         ) : (
-          <div className="max-w-[1800px] w-11/12  m-auto md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-11/12 mt-10 m-auto">
+          <div className="max-w-[1800px] w-11/12  m-auto md:w-11/12 lg2:w-11/12 3xl:w-10/12 6xl:w-11/12 mt-10">
             <div className="flex flex-col-reverse  lg:flex-row justify-between">
-              <div className={`w-full lg:w-9/12 flex flex-col justify-center`}>
-                <div className={`flex flex-col justify-center`}>
+              <div className={`w-full lg:w-[80%] flex flex-col justify-center`}>
+                <div
+                  className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2`}
+                >
                   {blogList.map((item: blogListRes, index: number) => (
                     <button
                       key={index}
-                      onClick={() => openblog(item.detail_link ?? '')}
-                      className="w-full "
+                      onClick={() => openBlog(item.detail_link ?? "")}
+                      className={"w-full border-2 border-solid"}
                     >
-                      <div className={`border-b-2 p-4`}>
-                        <div className="flex flex-col md:flex-row pb-4">
-                          <div className="mr-6 w-full md:w-3/12 h-full flex md:block">
-                            <Image
-                              src={
-                                item.img_src === "" || !item.img_src
-                                  ? defaultImage
-                                  : item.img_src
-                              }
-                              alt="썸네일 이미지"
-                              className={`w-4/12 xs:w-1/2 md:w-full h-[100px] xs:h-[150px] md:h-[200px]`}
-                              width={200}
-                              height={200}
-                            />
-                            <ul
-                              className={`w-8/12 xs:w-1/2 ml-1 block md:hidden`}
-                            >
-                              <li className="font-bold text-[20px] md:text-[30px] my-4">
-                                {item.title}
-                              </li>
-                              <li>
-                                <span className="text-[16px] md:text-[26px]">
-                                  chanhong
-                                </span>
-                              </li>
-                              <li>
-                                <span className="text-[13px] md:text-[16px] text-[#828282]">
-                                  {moment(item.created_at).format("YYYY-MM-DD")}
-                                </span>
-                              </li>
-                            </ul>
-                          </div>
-                          {/* 우측 */}
-                          <div className={`w-9/12`}>
-                            <ul className="hidden md:block flex-col space-y-1">
-                              <li className="font-bold text-[20px] md:text-[30px] my-4">
-                                {item.title}
-                              </li>
-                              <li className="text-center">
-                                <span className="text-[26px]">chahong</span>
-                                <span className="text-[16px] ml-2 text-[#828282]">
-                                  {moment(item.created_at).format("YYYY-MM-DD")}
-                                </span>
-                              </li>
-                              <li className="text-[#828282] text-center md:flex justify-center space-x-1.5 text-[20px]">
-                                <span>{item.intro}</span>
-                              </li>
-                            </ul>
-                          </div>
+                      <div className={"flex flex-col justify-between h-full"}>
+                        <div>
+                          <Image
+                            src={
+                              item.img_src === "" || !item.img_src
+                                ? defaultImage
+                                : item.img_src
+                            }
+                            alt="썸네일 이미지"
+                            className={`w-full h-[300px]`}
+                            width={1000}
+                            height={500}
+                          />
+                        </div>
+                        <div className={"flex flex-col space-y-2 my-4 mx-4"}>
+                          <h3 className={`text-xl font-semibold line-clamp-1`}>
+                            {item.title ?? ""}
+                          </h3>
+                          <p className={`flex space-x-2 justify-center`}>
+                            <span className={`font-medium`}>chanhong</span>
+                            <span>
+                              {moment(item.created_at).format("YYYY-MM-DD")}
+                            </span>
+                          </p>
+                          <p className={`flex justify-center space-x-2`}>
+                            {item.tags &&
+                              item.tags.length > 0 &&
+                              item.tags
+                                .split(",")
+                                .slice(0, 3)
+                                .map((item) => (
+                                  <span
+                                    key={`${item}-${index}`}
+                                    className="px-4 py-2 rounded-[20px] font-semibold bg-gray-100"
+                                  >
+                                    {item}
+                                  </span>
+                                ))}
+                          </p>
                         </div>
                       </div>
                     </button>
                   ))}
                 </div>
               </div>
-              <div className=" w-full lg:w-3/12">
+              <div className=" w-full lg:w-[20%]">
                 <div className=" px-2 py-4">
                   <div className="flex border-2 lg:mb-6 rounded-xl justify-between p-1">
                     <input
-                      className="mx-2 p-1 outline-none w-11/12 w-full h-full rounded-xl p-2 dark:bg-[#232323]"
+                      className="mx-2 outline-none w-11/12 h-full rounded-xl p-2 dark:bg-[#232323]"
                       ref={searchRef}
                       type="text"
                       onKeyUp={handleKeyUp}
@@ -232,12 +228,16 @@ const page = () => {
                       Tags
                     </p>
                     <div
-                      className={`flex flex-wrap flex-row   mt-2 space-x-1 ml-4 lg:ml-0 lg:mt-0 lg:flex-col lg:space-y-1 text-[#858585]`}
+                      className={`flex flex-wrap flex-row mt-2 space-x-1 space-y-1 ml-4 lg:ml-0 lg:mt-0 lg:flex-col lg:space-y-1 text-[#858585]`}
                     >
                       {tagList.map((item: Itag, index: number) => (
                         <button
                           key={index}
                           type="button"
+                          className={`
+                            px-4 py-2 rounded-[20px] font-semibold bg-gray-100
+                            lg:px-0 lg:py-0 lg:rounded-[0px] lg:font-normal lg:bg-white
+                          `}
                           onClick={() => searchTag(item.tag)}
                         >
                           #{item.tag}
@@ -261,7 +261,7 @@ const page = () => {
                 <button
                   type="button"
                   onClick={() => clickPage(Number(item))}
-                  className={`text-[22px] px-3 py-1 border-y-2 border-l-2 hover:bg-[#17112B] hover:text-white hover:border-[#17112B] ${
+                  className={`text-[22px] px-4 py-1 border-y-2 border-l-2 hover:bg-[#17112B] hover:text-white hover:border-[#17112B] ${
                     page === item
                       ? "bg-[#17112B] text-white border-[#17112B]"
                       : ""
