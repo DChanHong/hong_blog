@@ -26,6 +26,7 @@ const Section3 = ({ blogList }: props) => {
   const openBlog = (link: string) => {
     window.open(`${link}`, "_blank", "noreferrer");
   };
+
   return (
     <div
       className={`w-full m-auto max-w-[1800px] flex justify-center mt-[150px] mb-20 ${flagClass}`}

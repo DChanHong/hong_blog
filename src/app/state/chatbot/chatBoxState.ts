@@ -10,6 +10,11 @@ export const chatIsChatBoxState = atom<boolean>({
   default: false,
 });
 
+export const chatPossibleState = atom<boolean>({
+  key: "chatPossible",
+  default: true,
+});
+
 export const chatListState = atom<IConversation[]>({
   key: "chatListState",
   default: [],
