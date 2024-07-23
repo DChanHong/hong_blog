@@ -5,6 +5,8 @@ import { CiSearch } from "react-icons/ci";
 import { threadState } from "@/app/state/chatbot/threadState";
 import { assistantState } from "@/app/state/chatbot/assistantState";
 import { IConversation } from "@/app/state/chatbot/chatBoxState";
+import { chatPossibleState } from "@/app/state/chatbot/chatBoxState";
+import { questionListState } from "@/app/state/chatbot/chatContentState";
 import {
   chatIsChatBoxState,
   chatListState,
@@ -19,7 +21,6 @@ import {
   getListMessage,
   checkIp,
 } from "@/hooks/gptAPI/gpt";
-import {questionListState} from "@/app/state/chatbot/chatContentState";
 
 interface props {
   question?: string;
@@ -33,7 +34,6 @@ export const MainChatBot = ({
   savedAnswer,
 }: props) => {
   const chatInputRef = useRef<HTMLInputElement | null>(null);
-  const [isChatPossible, setIsChatPossible] = useState<boolean>(true);
 
   const [apiLoading, setApiLoading] = useState<boolean>(false);
 
@@ -48,6 +48,9 @@ export const MainChatBot = ({
   // 어시스턴트 아이디 저장 (default값이고 바뀔일 없음)
   const [assistantStateId, setAssistantStateId] =
     useRecoilState(assistantState);
+
+  // IP 체크 통과했는지
+  const [isChatPossible, setIsChatPossible] = useRecoilState(chatPossibleState);
 
   useEffect(() => {
     // 이 경우 질문 시작
@@ -82,7 +85,9 @@ export const MainChatBot = ({
   }, [savedQuetions, savedAnswer]);
 
   useEffect(() => {
-    chatPossible();
+    if (ischatBoxState) {
+      chatPossible();
+    }
   }, [ischatBoxState]);
 
   // IP 체크
@@ -145,10 +150,17 @@ export const MainChatBot = ({
     if (completeStatus) {
       const result: any = await getListMessage(thread_id);
       const cleanedText = result.text.value.replace(/【\d+:\d+†source】/g, "");
-      newChatList.push({
-        is_answer: true,
-        message: cleanedText,
-      });
+      if (cleanedText.includes("false")) {
+        newChatList.push({
+          is_answer: true,
+          message: "입력된 정보가 없습니다.",
+        });
+      } else {
+        newChatList.push({
+          is_answer: true,
+          message: cleanedText,
+        });
+      }
       setChatList(newChatList);
     }
     await chatPossible();
@@ -160,7 +172,7 @@ export const MainChatBot = ({
       if (chatInputRef.current) {
         const question = chatInputRef.current.value;
         await startChat(question);
-        chatInputRef.current.value = "";
+        // chatInputRef.current.value = "";
       }
     }
   };
@@ -168,7 +180,7 @@ export const MainChatBot = ({
     if (chatInputRef.current) {
       const question = chatInputRef.current.value;
       await startChat(question);
-      chatInputRef.current.value = "";
+      // chatInputRef.current.value = "";
     }
   };
 
@@ -219,7 +231,7 @@ export const MainChatBot = ({
                     }`}
                   >
                     <span
-                      className={`px-3 py-1.5 rounded-xl max-w-[70%] break-all ${
+                      className={`px-3 py-1.5 rounded-xl max-w-[70%] break-all whitespace-pre-line ${
                         item.is_answer
                           ? "bg-[#EFF4FB] dark:bg-[#1A222C] text-black dark:text-[#818A94] "
                           : "bg-[#3C50E0] text-white"

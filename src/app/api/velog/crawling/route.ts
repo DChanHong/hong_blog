@@ -1,141 +1,154 @@
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-import puppeteer from 'puppeteer-core';
-import chromium from '@sparticuz/chromium-min';
+import puppeteer from "puppeteer-core";
+import chromium from "@sparticuz/chromium-min";
 import prisma from "@/utils/client";
-import {blogListRes} from "@/dataDto/blogDto";
+import { blogListRes } from "@/dataDto/blogDto";
 
 interface BlogCrawl {
-	title: string;
-	img_src: string;
-	created_at: string;
-	tags: string[];
-	detail_link: string;
-	intro: string;
+  title: string;
+  img_src: string;
+  created_at: string;
+  tags: string[];
+  detail_link: string;
+  intro: string;
 }
-
 
 // background에서 브라우저를 열어서 내용을 가져오는 함수
 const openBrowser = async (url: string) => {
-	chromium.setHeadlessMode = true;
-	chromium.setGraphicsMode = false;
+  chromium.setHeadlessMode = true;
+  chromium.setGraphicsMode = false;
 
-	// 크로미움으로 브라우저를 연다.
-	const browser = await puppeteer.launch(
-		process.env.NODE_ENV === 'development' ?
-			// 로컬 실행 환경
-			{
-				headless: true,
-				executablePath: process.env.NEXT_LOCAL_CHROME_PATH,
-			}
-			:
-			// 서버 실행 환경
-			{
-				args: [...chromium.args, '--hide-scrollbars', '--disable-web-security', "--no-sandbox", "--disable-setuid-sandbox"],
-				defaultViewport: chromium.defaultViewport,
-				executablePath: await chromium.executablePath(),
-				headless: chromium.headless,
-				ignoreHTTPSErrors: true
-			}
-	);
+  // 크로미움으로 브라우저를 연다.
+  const browser = await puppeteer.launch(
+    process.env.NODE_ENV === "development"
+      ? // 로컬 실행 환경
+        {
+          headless: true,
+          executablePath: process.env.NEXT_LOCAL_CHROME_PATH,
+        }
+      : // 서버 실행 환경
+        {
+          args: [
+            ...chromium.args,
+            "--hide-scrollbars",
+            "--disable-web-security",
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+          ],
+          defaultViewport: chromium.defaultViewport,
+          executablePath: await chromium.executablePath(``),
+          headless: chromium.headless,
+          ignoreHTTPSErrors: true,
+        }
+  );
 
-	// console.log('browser',browser)
-	// 페이지 열기
-	const page = await browser.newPage();
+  // console.log('browser',browser)
+  // 페이지 열기
+  const page = await browser.newPage();
 
-	// 링크 이동
-	await page.goto(url, {
-		waitUntil: "networkidle2" // 500ms 동안 두 개 이상의 네트워크 연결이 없을 때 탐색이 완료되는 것으로 간주
-	});
+  // 링크 이동
+  await page.goto(url, {
+    waitUntil: "networkidle2", // 500ms 동안 두 개 이상의 네트워크 연결이 없을 때 탐색이 완료되는 것으로 간주
+  });
 
-	//4. HTML 정보 가지고 온다.
-	const content: string = await page.content();
-	// console.log(content);
+  //4. HTML 정보 가지고 온다.
+  const content: string = await page.content();
+  // console.log(content);
 
-	//5. 페이지와 브라우저 종료
-	await page.close();
+  //5. 페이지와 브라우저 종료
+  await page.close();
 
-	return content;
-}
+  return content;
+};
 
 const getHtml = async (url: string) => {
-	try {
-		const $ = cheerio.load(await openBrowser(url));
+  try {
+    const $ = cheerio.load(await openBrowser(url));
 
-		let content: any[] = [];
-		const ARTICLE_SELECTOR = $("main section > div:nth-child(2) > div:nth-child(3) > div");
+    let content: any[] = [];
+    const ARTICLE_SELECTOR = $(
+      "main section > div:nth-child(2) > div:nth-child(3) > div"
+    );
 
-		// FUNCTION get tag
-		const getTag = (tagSelector: any) => {
-			let result: string[] = []
+    // FUNCTION get tag
+    const getTag = (tagSelector: any) => {
+      let result: string[] = [];
 
-			const tagList = $(tagSelector).find(".FlatPostCard_tagsWrapper__iNQR3 > a");
+      const tagList = $(tagSelector).find(
+        ".FlatPostCard_tagsWrapper__iNQR3 > a"
+      );
 
-			tagList.map((idx, el) => {
-				const tag = $(el).text();
-				result[idx] = tag;
-			});
+      tagList.map((idx, el) => {
+        const tag = $(el).text();
+        result[idx] = tag;
+      });
 
-			return result;
-		}
+      return result;
+    };
 
-		ARTICLE_SELECTOR.map((idx, el) => {
-			content[idx] = {
-				img_src: $(el).find("img").attr('src'),
-				created_at: $(el).find(".FlatPostCard_subInfo__cT3J6 > span:first-of-type").text(),
-				intro: $(el).find("p").text(),
-				detail_link: $(el).find("a:first-child").attr('href'),
-				title: $(el).find("h2").text(),
-				tags: getTag(el),
-			};
-		});
-		return content;
-	} catch (e) {
-		console.log(e);
-	}
-}
-
+    ARTICLE_SELECTOR.map((idx, el) => {
+      content[idx] = {
+        img_src: $(el).find("img").attr("src"),
+        created_at: $(el)
+          .find(".FlatPostCard_subInfo__cT3J6 > span:first-of-type")
+          .text(),
+        intro: $(el).find("p").text(),
+        detail_link: $(el).find("a:first-child").attr("href"),
+        title: $(el).find("h2").text(),
+        tags: getTag(el),
+      };
+    });
+    return content;
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 export async function GET(request: Request) {
-	const article: BlogCrawl[] | null = await getHtml(process.env.NEXT_PUBLIC_BLOG_URL || '') ?? null;
-	const blogList:blogListRes[] =await prisma.velog.findMany({})
+  const article: BlogCrawl[] | null =
+    (await getHtml(process.env.NEXT_PUBLIC_BLOG_URL || "")) ?? null;
+  const blogList: blogListRes[] = await prisma.velog.findMany({});
 
+  if (blogList && article && article.length > 0) {
+    const stingFilter = (arr: string[]) => {
+      let str = "";
+      arr.length >= 0 &&
+        arr.forEach((item: string, index: number) => {
+          str += `${item}${arr.length === index + 1 ? "" : ","}`;
+        });
+      return str;
+    };
 
-	if (blogList && article && article.length > 0) {
+    const result = await Promise.all(
+      article.map(async (item) => {
+        if (blogList.find((blog) => blog.title === item.title)) {
+          return "";
+        } else {
+          return await prisma.velog.create({
+            data: {
+              title: item.title ?? "",
+              img_src: item.img_src ?? "",
+              created_at: new Date(
+                item.created_at
+                  .replace("년 ", "-")
+                  .replace("월 ", "-")
+                  .replace("일", "")
+              ),
+              tags: stingFilter(item.tags),
+              detail_link: item.detail_link ?? "",
+              intro: item.intro ?? "",
+            },
+          });
+        }
+      })
+    );
+  }
 
-		const stingFilter = (arr:string[])=>{
-			let str = ''
-			arr.length>=0 && arr.forEach((item:string,index:number)=> {
-				str+=`${item}${arr.length===index+1?'':','}`
-			})
-			return str
-		}
-
-		const result =await Promise.all(
-			article.map(async item => {
-				if (blogList.find((blog)=>blog.title === item.title)) {
-					return ''
-				} else {
-					return await prisma.velog.create({
-						data: {
-							title:item.title ?? '',
-							img_src:item.img_src ?? '',
-							created_at:(new Date(item.created_at.replace('년 ','-').replace('월 ','-').replace('일',''))),
-							tags: stingFilter(item.tags),
-							detail_link :item.detail_link ?? '',
-							intro:item.intro ??''
-						},
-					});
-				}
-			})
-		);
-	}
-
-	return NextResponse.json({data: ""}, {status: 200});
+  return NextResponse.json({ data: "" }, { status: 200 });
 }
-
 
 // export async function GET(request: Request) {
 //   const html = await axios.get("https://velog.io/@hongchee/posts");

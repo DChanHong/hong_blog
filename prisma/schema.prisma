@@ -18,8 +18,8 @@ model velog {
 }
 
 model checkip {
-  idx        Int       @id @default(autoincrement())
-  ip         String    @db.VarChar(200)
-  hit        Int       @default(1)
-  updated_at DateTime? @db.DateTime(0)
+  idx        Int      @id @default(autoincrement())
+  ip         String   @db.VarChar(200)
+  hit        Int      @default(1)
+  updated_at DateTime @db.DateTime(0)
 }
