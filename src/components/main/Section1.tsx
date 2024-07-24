@@ -7,7 +7,13 @@ const Section1 = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center font-bold text-center text-[26px] xs:text-[46px] md:text-[70px] h-[50vh] md:h-[70vh] bg-[#010118] mt-[100px] text-white">
+      <div
+        className={`
+          flex items-center justify-center font-bold text-center 
+          text-[36px]  xs:text-[46px] md:text-[70px]  bg-[#010118] mt-[100px] text-white
+          h-[25vh] md:h-[40vh] lg:h-[50vh] 2xl:h-[70vh]
+        `}
+      >
         <h2 ref={targetRef} className={` ${flagClass}`}>
           Hong Developer
         </h2>

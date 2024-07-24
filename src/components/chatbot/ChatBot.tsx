@@ -184,7 +184,10 @@ export const ChatBot = () => {
             }}
           >
             <div
-              className={`bg-white dark:bg-[#232323] w-[90%] lg:w-1/2 h-[70%] overflow-hidden -translate-y-[10%] p-6 rounded-2xl z-50`}
+              className={`bg-white dark:bg-[#232323] w-[90%] lg:w-1/2 h-2/3
+                         overflow-hidden -translate-y-[10%] p-6 rounded-2xl z-50
+                         flex flex-col justify-between
+                         `}
               onClick={(e) => e.stopPropagation()}
             >
               <div
@@ -204,7 +207,7 @@ export const ChatBot = () => {
                 </p>
               </div>
               <div
-                className={`h-[80%] overflow-y-auto border-x-2 border-b-2 p-2`}
+                className={`h-[85%] overflow-y-auto border-x-2 border-b-2 p-2`}
               >
                 <ul className={`flex flex-col space-y-1`}>
                   {chatList.length > 0 &&
@@ -234,7 +237,7 @@ export const ChatBot = () => {
                 <div className={`flex mt-2`}>
                   {!apiLoading ? (
                     <input
-                      className={`w-full items-center p-2 border-2 rounded-xl`}
+                      className={`w-full items-center p-4 border-2 rounded-xl`}
                       placeholder="ex) 찬홍님의 이력은 어떻게 되나요?"
                       ref={chatInputRef}
                       onKeyUp={enterButton}

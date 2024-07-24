@@ -142,7 +142,13 @@ const page = () => {
   return (
     <Layout>
       <section className="w-full m-auto">
-        <div className="flex items-center justify-center font-bold text-center text-[26px] xs:text-[46px] md:text-[70px] h-[50vh] md:h-[70vh] bg-[#010118] mt-[100px] text-white">
+        <div
+          className={`
+            flex items-center justify-center font-bold text-center 
+            text-[36px]  xs:text-[46px] md:text-[70px]  bg-[#010118] mt-[100px] text-white
+            h-[25vh] md:h-[40vh] lg:h-[50vh] 2xl:h-[70vh]
+            `}
+        >
           <p className="text-white">Blog</p>
         </div>
         {searchStatus !== "success" ? (
@@ -248,11 +254,11 @@ const page = () => {
                 </div>
               </div>
             </div>
-            <div className={`mt-6 flex justify-center`}>
+            <div className={`mt-8 md:mt-12 flex justify-center`}>
               <button
                 type="button"
                 onClick={prevPage}
-                className={`border-y-2 border-l-2 px-2 py-1 hover:bg-[#17112B] hover:text-white hover:border-[#17112B]`}
+                className={`border-y-2 border-l-2 px-4 py-1 hover:bg-[#17112B] hover:text-white hover:border-[#17112B]`}
                 disabled={page === 1}
               >
                 이전
@@ -274,7 +280,7 @@ const page = () => {
               <button
                 type="button"
                 onClick={nextPage}
-                className={`border-y-2 border-2 px-2 py-1 hover:bg-[#17112B] hover:text-white hover:border-[#17112B]`}
+                className={`border-y-2 border-2 px-4 py-1 hover:bg-[#17112B] hover:text-white hover:border-[#17112B]`}
                 disabled={page === totalPage}
               >
                 다음
