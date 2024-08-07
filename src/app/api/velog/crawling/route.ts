@@ -122,6 +122,20 @@ export async function GET(request: Request) {
       return str;
     };
 
+    const now = new Date();
+
+    const createDate = (daysAgo: number) => {
+      const date = new Date(now);
+      date.setDate(now.getDate() - daysAgo);
+      date.setHours(18, 0, 0, 0); // 18시 00분 00초 000밀리초로 설정
+      return date;
+    };
+
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(18, 0, 0, 0);
+    console.log(article);
+
     const result = await Promise.all(
       article.map(async (item) => {
         if (blogList.find((blog) => blog.title === item.title)) {
@@ -131,12 +145,17 @@ export async function GET(request: Request) {
             data: {
               title: item.title ?? "",
               img_src: item.img_src ?? "",
-              created_at: new Date(
-                item.created_at
-                  .replace("년 ", "-")
-                  .replace("월 ", "-")
-                  .replace("일", "")
-              ),
+              created_at:
+                item.created_at === "어제"
+                  ? yesterday
+                  : item.created_at.includes("전")
+                  ? createDate(Number(item.created_at.substring(0, 1)))
+                  : new Date(
+                      item.created_at
+                        .replace("년 ", "-")
+                        .replace("월 ", "-")
+                        .replace("일", "")
+                    ),
               tags: stingFilter(item.tags),
               detail_link: item.detail_link ?? "",
               intro: item.intro ?? "",
